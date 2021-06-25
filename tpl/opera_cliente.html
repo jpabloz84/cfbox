@@ -1,0 +1,72 @@
+<div class="col-md-12" >  
+          <div class="panel panel-success">
+           <div class="panel-heading">
+            <div class="panel-heading-btn">
+                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+            </div>
+                <h4 class="panel-title"><%=campo.get('strnombrecompleto')%> - <%=campo.get('documento')%> <%=campo.get('nro_docu')%> - CUIT <%=campo.get('cuit')%> </h4>
+           </div>             
+                <div class="panel-body bg-green text-white" id="panel-body-inputs">
+                 <form class="form-inline" action="/" method="POST">                    
+                        <div class="form-group m-r-10">                                
+                            <ul class="media-list media-list-with-divider">
+                            <li class="media media-sm">
+                                <a class="media-left" href="javascript:;">
+                                    <%
+                                    var img_thumbs="";
+                                    if(campo.get('img_personal')!="" && campo.get("img_personal") != null)
+                                    {
+                                        img_thumbs=base_url+campo.get('img_personal').replace("img","thumbs");
+                                    }else
+                                    {
+                                        img_thumbs=base_fw+"assets/img/default-large.jpg";
+                                    }
+                                    
+                                    %>
+                                    <img src="<%=img_thumbs%>" alt="" class="media-object rounded-corner">
+                                </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading" id="inp_cliente">
+                                    DOMICILIO: <%=campo.get('domicilio')%> - <%=campo.get('descripcion_loc')%> (<%=campo.get('descripcion_pro')%>) - TELEFONO: <%=campo.get('telefono')%> - EMAIL: <%=campo.get('email')%>
+                                    </h4>
+                                    <p id="inp_observacion"><%=campo.get('observaciones')%></p>
+                                    <p> 
+                                        <% if(campo.get('cf')!=1){%>
+                                        <a href="javascript:;" class="btn btn-sm btn-info m-r-5" id="btn-editar"><i class="fa fa-user"></i> editar cliente </a>
+                                        <%}%>                                        
+                                        <a href="javascript:;" class="btn btn-sm btn-default" id="btn-regresar"><i class="fa fa-reply"></i> regresar</a>
+                                        <%
+                                        if(urlcomprobante !=''){                                        
+                                        %>
+                                        <a  target="_blank" href="<%=base_url+urlcomprobante %>" class="btn btn-sm btn-inverse m-r-5"><i class="fa fa-file-text">
+                                        </i>ver comprobante</a>
+                                        <%}%>                                        
+                                        <%
+                                        if(urlnuevaventa !=''){                                        
+                                        %>
+                                        <a  href="javascript:;" class="btn btn-sm btn-white m-r-5" id="btn-nuevaventa"><i class="fa fa-undo"></i>
+                                        nueva venta</a>
+                                        <%}%>
+
+
+                                    </p>
+                                    
+                                        <% 
+                                        if(campo.get('id_cliente_representante')>0 && campo.get('id_cliente_representante')!=null){%>
+                                        <div class="alert alert-warning fade in m-b-2">
+                                            Actuando en representación de <strong><%=campo.get('strnombrecompleto_representante')%> - cuit <%=campo.get('cuit_representante')%> (<%=campo.get('condicion_representante')%>)</strong>
+                                            <br />
+                                <input type="checkbox" id="chk-id-representa" name="chk-id-representa" class="form-control"  checked="checked" title="destilde si quiere facturar con cuit propio">&nbsp;(destilde esta opción para facturar con cuit propio)
+                                        </div>
+                                        <%}%>
+                                    
+                                </div>
+                            </li>
+                            </ul>
+                        </div>                        
+                </form>
+                </div>
+    </div>
+</div>

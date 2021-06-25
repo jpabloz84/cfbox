@@ -1,0 +1,17 @@
+<table id="data-table-seach" class="table table-striped table-bordered nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>CODIGO</th>                                        
+                                <th>DESCRIPCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>                                                               
+                        <% _.each(ls, function(elemento) {  %>
+                        <tr class="gradeA">        
+                            <td><a href="#/edit/<%=elemento.get('id_consultorio')%>" id="elemento-<%=elemento.get('id_consultorio')%>" data-type="text" data-pk="1" data-title="Ingrese el dato"><%=elemento.get('consultorio') %></a></td>
+                            <td><%=elemento.get('id') %> </td>
+                            <td><%=elemento.get('descripcion') %></td>
+                        </tr>
+                        <% }); %>
+                        </tbody>
+</table>

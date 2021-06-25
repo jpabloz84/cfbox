@@ -1,0 +1,466 @@
+ <!-- begin col-12 -->
+        <div class="col-md-12" id="data-table-empresa">  
+            <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">                 
+                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">Empresas alta/modificación</h4></div>             
+                   <div class="panel-body" id="panel-body-empresa-abm">
+                         <fieldset>
+                            <legend id="legend-empresa">Datos de la empresa</legend>
+                            <form class="form-horizontal">
+                            <div class="row">                            
+                            <div class="col-md-7">                                
+                                <div class="form-group">
+                                    <label for="inpempresa" class="col-md-3 control-label">Nombre (*)</label>
+                                    <div class="col-md-9">
+                                    <input type="text" class="form-control" id="inpempresa" placeholder="nombre empresa" value="<%=empresa.get('empresa')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpcuil" class="col-md-3 control-label">Cuil</label>
+                                    <div class="col-md-9">
+                                    <input type="text" class="form-control" id="inpcuil" placeholder="cuil"  value="<%=empresa.get('cuitl')%>" />
+                                    </div>
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <label for="inptelefono"  class="col-md-3 control-label">telefono (*)</label>
+                                    <div class="col-md-9">
+                                    <input type="text" class="form-control" id="inptelefono" placeholder="" value="<%=empresa.get('telefono')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inpprovincia_empresa"  class="col-md-3 control-label">Provincia (*)</label>
+                                     <div class="col-md-9">
+                                         <select id="inpprovincia_empresa" name="inp_provincia"  class="form-control" >
+                                            <% 
+                                            for(i in oprovincias.models){
+                                            var prov=oprovincias.models[i]
+                                            %><option value="<%=prov.get('id_pro')%>"><%=prov.get('descripcion_pro')%></option>
+                                            <%
+                                            }
+                                            %>
+                                         </select>
+                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inplocalidad"  class="col-md-3 control-label">Localidad (*)</label>
+                                    <div class="col-md-9">
+                                     <select id="inplocalidades" name="inplocalidades"  class="form-control" >
+                                     </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpdireccion"  class="col-md-3 control-label">Dirección (*)</label>
+                                    <div class="col-md-9">
+                                    <input type="text" class="form-control" id="inpdireccion" placeholder=""  value="<%=empresa.get('direccion')%>"  />
+                                    </div>
+                                </div>  
+                                
+                            </div>
+                            <div class="col-md-5">                               
+                                <div class="form-group">
+                                     <label for="inphabilitado" class="col-md-3 control-label">Habilitado                              
+                                    <%
+                                    
+                                    var checkedhabilitado=(empresa.get('habilitado')==1)?"checked='checked'":""
+                                    %>   </label> 
+                                    <div class="col-md-9">   
+                                     <input type="checkbox"  id="inphabilitado"  class="form-control" <%=checkedhabilitado%> />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                      <label for="inpingresosbrutos" class="col-md-3 control-label">Ingresos Brutos</label>
+                                      <div class="col-md-9">
+                                    <input type="text" class="form-control" id="inpingresosbrutos"  value="<%=empresa.get('ingresos_brutos')%>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpinicioactividades" class="col-md-3 control-label">Inicio de actividades</label>
+                                      <div class="col-md-9">
+                                    <input type="text" class="form-control" id="inpinicioactividades" value="<%=empresa.get('inicio_actividades')%>" />
+                                        </div>
+                                </div>
+                                <div class="form-group">
+                                      <label for="inpcondiva"  class="col-md-3 control-label">Condicion iva </label>
+                                      <div class="col-md-9">
+                                    <select id="inpcondiva" name="inpcondiva"  class="form-control" >
+                                         <% 
+                                            for(i in ocondiciones_iva.models){
+                                            var cond=ocondiciones_iva.models[i]
+                                            %><option value="<%=cond.get('id_cond_iva')%>"><%=cond.get('condicion')%>(<%=cond.get('comp_tipo')%>)</option>
+                                            <%
+                                              }
+                                            %>
+                                     </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inppage" class="col-md-3 control-label">Pagina (*)</label>
+                                      <div class="col-md-9">
+                                         <input type="text" class="form-control" id="inppage" value="<%=empresa.get('page')%>" />
+                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inplogo" class="col-md-3 control-label" >Logo (max. 200 x 200)</label>
+                                    <div class="col-md-9">
+                                        <% var logo=(empresa.get('logo')==null)?'':empresa.get('logo')
+                                        if(logo==''){
+                                        logo=base_url+'assets/img/default-thumbs-96.jpg'
+                                        }else{
+                                        logo=base_url+logo
+                                        }
+                                        %>
+                                        
+                                         <img src="<%=logo%>" alt="logo de empresa" id="inpimglogo" class="img-fluid img-thumbnail"  title="imagen" style="height: 100px;width: auto" />
+                                         <input type="checkbox" id="is-new-img"  style="display: none"/>
+                                        <input type="file" id="inplogo"   accept="image/*"  />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                      </fieldset>
+                      <fieldset>
+                        <legend id="legend-variables">Variables de la pagina</legend>
+                            <%
+                            var datos_pagina=empresa.get('datos_pagina')                           
+                            %>
+                            <form class="form-horizontal">
+                            <div class="row">
+                            <div class="col-md-4">                               
+                                <div class="form-group">
+                                    <label for="inpmetaautor" class="col-md-5 control-label">Nombre a mostrar(meta_autor)</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpmetaautor" placeholder="nombre " value="<%=datos_pagina.get('meta_autor')%>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpmeta_keywords" class="col-md-5 control-label">meta_keywords</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpmeta_keywords" placeholder="" value="<%=datos_pagina.get('meta_keywords')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpgoogle_ads_cliente" class="col-md-5 control-label">Google ads cliente</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpgoogle_ads_cliente" placeholder="" value="<%=datos_pagina.get('google_ads_cliente')%>"  />
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="inptitle_page" class="col-md-5 control-label">Titulo de la pagina(meta title_page)</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inptitle_page" placeholder=""  value="<%=datos_pagina.get('title_page')%>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inptitulo" class="col-md-5 control-label">Titulo principal</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inptitulo" placeholder="ingrese nombre " value="<%=datos_pagina.get('titulo')%>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpfb_page" class="col-md-5 control-label">facebook (fb_page) </label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpfb_page" placeholder="" value="<%=datos_pagina.get('fb_page')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inptwiter_page" class="col-md-5 control-label">twiter (twiter_page) </label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inptwiter_page" placeholder=""  value="<%=datos_pagina.get('twiter_page')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inpinstagram_page" class="col-md-5 control-label">instagram (instagram_page)</label>
+                                     <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpinstagram_page" placeholder="" value="<%=datos_pagina.get('instagram_page')%>"  />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                 
+
+                                 <div class="form-group">
+                                     <label for="inpwhatsapp1"  class="col-md-5 control-label">Whats App 1</label>
+                                     <div class="col-md-7">
+                                    <input type="number" class="form-control" id="inpwhatsapp1" placeholder="54 + caracteristica + numero sin 15" value="<%=datos_pagina.get('whatsapp1')%>" /> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inpwhatsapp2"  class="col-md-5 control-label">Whats App 2</label>
+                                     <div class="col-md-7">
+                                    <input type="number" class="form-control" id="inpwhatsapp2" placeholder="54 + caracteristica + numero sin 15" value="<%=datos_pagina.get('whatsapp2')%>" /> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inpfb_page_id" class="col-md-5 control-label">fb_page_id</label>
+                                     <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpfb_page_id" placeholder="" value="<%=datos_pagina.get('fb_page_id')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpslogan" class="col-md-5 control-label">slogan de la web</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpslogan" placeholder="" value="<%=datos_pagina.get('slogan')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inplocalidadcontacto" class="col-md-5 control-label">Localidad mostrar (Contacto)</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inplocalidadcontacto" placeholder="" value="<%=datos_pagina.get('localidad')%>"   />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpprovinciacontacto" class="col-md-5 control-label">Provincia mostrar (Contacto)</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpprovinciacontacto" placeholder="" value="<%=datos_pagina.get('provincia')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpcodigo_postal_contacto" class="col-md-5 control-label">Cod postal(Contacto)</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpcodigo_postal_contacto" placeholder="" value="<%=datos_pagina.get('codigo_postal')%>"   />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpdireccion_contacto" class="col-md-5 control-label">Dirección(Contacto)</label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpdireccion_contacto" placeholder=""  value="<%=datos_pagina.get('direccion')%>"  />
+                                    </div>
+                                </div>  
+                                 <div class="form-group">
+                                    <label for="inpatencion_publico" class="col-md-5 control-label">Atención al público</label>
+                                    <div class="col-md-7">                                    
+                                    <textarea class="form-control" rows="7" id="inpatencion_publico">
+                                        <%=datos_pagina.get('atencion_publico')%>
+                                    </textarea>
+                                    </div>
+                                </div>                          
+                            </div>
+                            <div class="col-md-4">                             
+                                 <div class="form-group" >
+                                     <label for="inpemail"  class="col-md-5 control-label">Email</label>
+                                     <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpemail" placeholder="" value="<%=datos_pagina.get('email')%>"   />
+                                    </div>
+                                 </div>
+                                <div class="form-group">
+                                      <label for="inpemail_host"  class="col-md-5 control-label">Host Email</label>
+                                      <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpemail_host" placeholder="" value="<%=datos_pagina.get('email_host')%>"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inpemail_pto"  class="col-md-5 control-label">Puerto Email </label>
+                                    <div class="col-md-7">
+                                    <input type="number" class="form-control" id="inpemail_pto" placeholder="" value="<%=datos_pagina.get('email_pto')%>"   />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                   <label for="inpssl" class="col-md-5 control-label">Ssl  
+                                    <%  checkedssl=(datos_pagina.get('email_ssl')==1)?"checkedssl='checked'":""%> </label>
+                                    <div class="col-md-7">
+                                    <input type="checkbox" id="inpssl" class="form-control" <%=checkedssl%> > 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inpemail_pwd"  class="col-md-5 control-label">Clave  </label>
+                                     <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpemail_pwd" placeholder="" value="<%=datos_pagina.get('email_pwd')%>"   />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                   <label for="inpprovincia_default"  class="col-md-5 control-label">Provincia Default</label>
+                                   <div class="col-md-7">
+                                    <select class="form-control" id="inpprovincia_default">
+                                         <% 
+                                            for(i in oprovincias.models){
+                                            var prov=oprovincias.models[i]
+                                            %><option value="<%=prov.get('id_pro')%>"><%=prov.get('descripcion_pro')%></option>
+                                            <%
+                                            }
+                                            %>
+                                    </select> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                     <label for="inplocalidad_default"  class="col-md-5 control-label">Localidad Default</label>
+                                     <div class="col-md-7">
+                                    <select class="form-control" id="inplocalidad_default"></select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                     <label for="inpquienessomos"  class="col-md-5 control-label">Quienes somos</label>
+                                     <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpquienessomos" placeholder="breve descripcion" value="<%=datos_pagina.get('quienes_somos')%>" /> 
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">                                   
+                                    <div class="form-group">
+                                      <label for="inpvideo_live" class="col-md-3 control-label">Video vivo</label>
+                                      <div class="col-md-2">
+                                        <% var checkedvideo_live=(datos_pagina.get('video_live')==1)?"checked='checked'":""
+                                        %>
+                                    <input type="checkbox" class="form-control" id="inpvideo_live" <%=checkedvideo_live%>  />  
+                                    </div>
+                                    <div class="col-md-7">                                        
+                                    <textarea id="inpvideo_live_code"  class="form-control" placeholder="ingrese codigo html del video"><%=datos_pagina.get('video_live_code')%></textarea>  
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                            </fieldset> 
+
+                            <fieldset>
+                            <legend id="legend-variables-conf">Productos que opera la empresa</legend>
+                            <%
+                             var tipos_items_empresa=empresa.get('tipos_items')
+                             
+                            %>
+                            <form class="form-horizontal">
+                                <div class="row">                                   
+                                        <div class="form-group">                                                                               
+                                            <div class="col-md-12">
+                                                <table class="table table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ITEMS</th>
+                                                                <th>SELECCIÓN</th>
+                                                                <th>VIGENTE</th>
+                                                                <th>POR DEFECTO</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                             <%
+                                                            for(i=0;i<tipos_items.models.length;i++){
+                                                            var id_tipo=tipos_items.models[i].get("id_tipo")
+                                                            var tipo=tipos_items.models[i].get("tipo")                                                
+                                                            var items=tipos_items_empresa.where({id_tipo:id_tipo})
+                                                            var selectedtipo=(items.length>0)?"checked='checked'":"";
+                                                            var vigentetipo=""
+                                                            var defaulttipo="";
+                                                            if(items.length>0){
+                                                            defaulttipo=(items[0].get("default")==1)?"checked='checked'":""
+                                                            vigentetipo=(items[0].get("vigente")==1)?"checked='checked'":""
+                                                            }
+                                                            
+                                                            %>
+                                                            <tr>
+                                                                <td><%=tipo%></td>
+                                                                <td><input type="checkbox" class="form-control" name="item" value="<%=id_tipo%>" <%=selectedtipo%> /></td>
+                                                                <td><input type="checkbox" class="form-control" name="vigente" value="<%=id_tipo%>" <%=vigentetipo%> /></td>
+                                                                <td><input type="radio" class="form-control"  name="item_default" value="<%=id_tipo%>" <%=defaulttipo%> /></td>
+                                                            </tr>
+                                                            <%}%>
+                                                        </tbody>
+                                                    </table>
+                                                
+                                            </div>
+                                        </div>                                    
+                                </div>
+                            </form>
+                            </fieldset>  
+                             <fieldset>
+                            <legend id="legend-variables-conf">Variables de configuración general</legend>
+                            <%
+                             var configuracion=empresa.get('configuracion')
+                            %>
+                            <form class="form-horizontal">
+                            <div class="row">
+                            
+                                <div class="col-md-4">                                 
+                                    <div class="form-group">                                       
+                                    <label for="inptotal_max_comp_c"  class="col-md-6 control-label">Monto max. comprobante C</label>
+                                    <div class="col-md-6">
+                                    <input type="number" class="form-control" id="inptotal_max_comp_c" placeholder=""  value="<%=configuracion.get('total_max_comp_c')%>" />
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">                                       
+                                    <label for="inpmp_token_access"  class="col-md-5 control-label">Mercado pago token Access (vacio para deshabilitar)</label>
+                                     <div class="col-md-7">
+                                    <input type="text" class="form-control" id="inpmp_token_access" placeholder="" value="<%=configuracion.get('mp_token_access')%>"   />
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">                                     
+                                    <div class="form-group">                                       
+                                    <label for="inpmp_modo_produccion" class="col-md-6 control-label">MP producción</label>
+                                    <div class="col-md-6">
+                                        <% var checkedmodoproducccion=(configuracion.get('mp_modo_produccion')==1)?"checked='checked'":""
+                                        %>
+                                    <input type="checkbox" class="form-control" id="inpmp_modo_produccion" <%=checkedmodoproducccion%>  />
+                                    </div>
+                                    </div>                                
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">                                   
+                                    <div class="form-group">
+                                      <label for="inplog_activo" class="col-md-6 control-label">Log Activo</label>
+                                      <div class="col-md-6">
+                                        <% var checkedlog_activo=(configuracion.get('log_activo')==1)?"checked='checked'":""
+                                        %>
+                                    <input type="checkbox" class="form-control" id="inplog_activo" <%=checkedlog_activo%>  />  
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">                                     
+                                    <div class="form-group">
+                                     <label for="inporden_pedido" class="col-md-6 control-label">genera ordenes de pedido</label>
+                                     <div class="col-md-6">
+                                         <% var checkedorden_pedido=(configuracion.get('orden_pedido')==1)?"checked='checked'":""
+                                        %>
+                                    <input type="checkbox" class="form-control" id="inporden_pedido"  <%=checkedorden_pedido%>  />
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="inpcomprobantes" class="col-md-6 control-label">genera comprobantes afip</label>
+                                        <div class="col-md-6">
+                                            <% var checkedcomprobantes=(configuracion.get('comprobantes')==1)?"checked='checked'":""
+                                        %>
+                                            <input type="checkbox" class="form-control" id="inpcomprobantes" <%=checkedcomprobantes%>   />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="inpguardar_compra" class="col-md-6 control-label">Permite guardar compra</label>
+                                    <div class="col-md-6">
+                                         <% var checkedguardar_compra=(configuracion.get('guardar_compra')==1)?"checked='checked'":""
+                                        %>
+                                    <input type="checkbox" class="form-control" id="inpguardar_compra"   <%=checkedguardar_compra%>  />
+                                    </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            </form>
+                            </fieldset>                           
+                                                        
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <button type="button" class="btn btn-lg btn-primary pull-right btn-save-empresa" idempresa="<%=empresa.get('id_empresa')%>" data-loading-text="<i class='fa fa-spinner fa-spin '></i> guardando...">
+                                        <i class="fa fa-edit"></i>Guardar
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                            <!--div body-->
+           </div>
+        </div>
+        <!-- end col-12 -->

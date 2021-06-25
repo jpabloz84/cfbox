@@ -1,0 +1,50 @@
+<div class="col-md-12" >  
+  <div class="panel panel-info">
+   <div class="panel-heading">
+    <div class="panel-heading-btn">                 
+         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+    </div>
+        <h4 class="panel-title">DETALLE DEL REMITO</h4>
+   </div>             
+        <div class="panel-body bg-aqua" id="panel-body-carrito">
+         <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>                                
+                            <th>ARTICULO</th>                            
+                            <th>PRECIO VENTA/u</th>                            
+                            <th>COSTO/u</th>
+                            <th>CANTIDAD</th>
+                            <th>COSTO TOTAL</th>                                    
+                        </tr>
+                    </thead>
+                    <tbody>
+                   <%  _.each(campos, function(cmp) { 
+                   var trclass=(trclass=='even')?'odd':'even'
+                   var disabledprecios=(modificarprecio)?"":"disabled='disabled'";
+                   %>
+                    <tr class="<%=trclass%>">
+                        <td><span class="badge badge-danger" style="cursor: pointer"  name="car_remove" id="car_remove_<%=cmp.get('id_articulo')%>">X</span></td>
+                        <td>                                                    
+                          <label  id="car_detalle_label_<%=cmp.get('id_articulo')%>" ><%=cmp.get('articulo')%></label>
+                       </td>                        
+                        <td>                          
+                          <input type="text" name="car_venta" value="<%=format_number(cmp.get('precio_venta'),'#.00') %>" id="car_venta_<%=cmp.get('id_articulo')%>" <%=disabledprecios %> />
+                        </td>
+                        <td>
+                          <input type="text" name="car_costo" value="<%=format_number(cmp.get('precio_costo'),'#.00') %>" id="car_costo_<%=cmp.get('id_articulo')%>" <%=disabledprecios %>/>
+                        </td>                        
+                        <td><input type="text" name="<%=(cmp.get('tipo_dato')=='int')?'car_cantidad':'car_cantidad_float'%>" value="<%=cmp.get('cantidad')%>" id="car_cantidad_<%=cmp.get('id_articulo')%>" /></td>
+                        <td><span class="label label-inverse" id="car_total_<%=cmp.get('id_articulo')%>" style="font-size: 100%">
+                           $ <%=format_number(cmp.get("costo_total"),'#.00') %>
+                        </span></td>
+                    </tr>
+                    <%})%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

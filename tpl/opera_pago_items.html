@@ -1,0 +1,93 @@
+<fieldset>
+    <legend>PAGOS DISPONIBLES</legend>
+    <%  var cantidad=campos.length;
+        var item=0;
+        var input_consaldo='';
+        var title_consaldo="";
+        var input_nopropio="";
+        var tabindex=1;
+        var input_disabled=(onlyread)?"disabled='disabled'":""
+    _.each(campos, function(elemento) {
+        item+=1;
+        input_nopropio=(elemento.get("propio"))?"":"disabled='disabled'"
+        input_consaldo=(elemento.get("propio"))?'':' (S)';
+        title_consaldo=(elemento.get("propio"))?"":"title='importe inputado con saldo'";
+        var montodisabled=(elemento.get("disabled"))?"disabled='disabled'":""
+        var tipos_pagos=elemento.get('tipospagos');
+        %>
+    <div class="form-group">
+        
+        <div class="col-md-2">
+            
+         <select tabindex="<%=tabindex%>" id="id_tipo_pago_<%=elemento.cid%>" class="form-control" name="id_tipo_pago" <%=input_disabled%> <%=input_nopropio%>>
+        <%        
+        
+        var id_comp_pagos=elemento.get('id_comp_pago');
+        var monto_afectado=elemento.get('monto_abona');
+        if(typeof id_comp_pagos != "undefined")
+        {
+            if(id_comp_pagos.length>0){
+            monto_afectado=elemento.get('monto_afectado');
+            }
+        }
+        
+        var tiposelected=tipos_pagos.findWhere({id_tipo_pago:elemento.get('id_tipo_pago').toString()})
+                _.each(tipos_pagos.models, function(tp) {                 
+                if((!(!ctacte && tp.get('id_tipo_pago')==7) && !(!saldoafavor && tp.get('id_tipo_pago')==6)) 
+                || (tp.get('id_tipo_pago')==7 && onlyread)){
+                    var strselected=(tp.get('id_tipo_pago') == elemento.get('id_tipo_pago'))?"selected='selected'":"";
+                %>
+                <option value="<%=tp.get('id_tipo_pago')%>"  <%=strselected %>  ><%=tp.get('tipo_pago')%></option>
+               <%}
+            })
+            tabindex+=1;
+             %>
+         </select>                
+        </div>                            
+        <div class="col-md-3">
+            <input title="Presione enter para calcular recargo (en caso de que lo hubiese)" tabindex="<%=tabindex%>" type="text" name="monto_abona" id="monto_abona_<%=elemento.cid%>" placeholder="monto..." class="form-control" value="<%=round2dec(parseFloat(monto_afectado))%><%=input_consaldo%>" <%=montodisabled%> <%=input_disabled%> <%=title_consaldo%> />
+            
+            <% 
+            tabindex+=1
+            %>
+        </div>
+        <% if(typeof  elemento.get('id_pago') != 'undefined' ){%>
+        <div class="col-md-1">
+            <% 
+            var tipopago=tipos_pagos.findWhere({id_tipo_pago:elemento.get('id_tipo_pago').toString()})
+            if(tipopago.get('incide_caja')!=0){ %>
+                <a href="javascript:;" class="btn btn-white btn-sm" id="recibo-link-<%=elemento.get('id_pago') %>"><i class="fa fa-file-pdf-o" title="recibo de pago"></i>&nbsp;recibo</a>
+            <%}%>            
+        </div>
+        <%}%>            
+        <div class="col-md-2" style="text-align: center;">
+            <input type="text"  id="observacion_<%=elemento.cid%>" placeholder="observacion" name="observacion" class="form-control" value="<%=elemento.get('observacion')%>" style="display:none" <%=input_disabled%> /><a href="javascript:;" id="observacion_link_<%=elemento.cid%>" class="btn btn-link m-b-5" style="color:white"><%=(elemento.get('observacion')=='')?'agregar observación':elemento.get('observacion')%> </a>
+        </div>
+        
+        <div class="col-md-1" style="text-align: right;">
+            <%             
+            var tipo=tiposelected.collection.findWhere({id_tipo_pago:tiposelected.get("id_tipo_pago")})
+            var params=tipo.get("parametros");
+            if(typeof params !="undefined")
+            {
+                if(params.length>0)
+                {%><button type="button" class="btn btn-sm btn-warning" id="btn-info-pago-<%=elemento.cid%>" id="info-<%=elemento.cid%>">
+                <i class="fa fa-info"></i>
+                </button>
+                <%}
+            }%>
+        </div>        
+        <div class="col-md-2"style="text-align: right;">
+        <% if(!onlyread){
+            if(elemento.get('eliminable'))
+            {%><button type="button" name="btn-elimina-pago" class="btn btn-sm btn-danger" id="btn-elimina-pago-<%=elemento.cid%>"><i class="fa fa-times"></i></button>
+            <%}
+            if(cantidad == item){%>
+            <button type="button" class="btn btn-sm btn-primary" id="btn-addpago">
+                <i class="fa fa-plus-circle"></i></button>
+            <%}
+        }%>
+        </div>
+    </div>
+        <% }) %>
+</fieldset>

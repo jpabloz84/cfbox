@@ -1,0 +1,21 @@
+<%
+var total=0
+_.each(campos, function(cmp) {
+total+=cmp.get("importe_total")
+})
+
+var importe_total=tomoney(total);
+ %>
+<div class="col-md-12" >  
+  <div class="panel panel-info">
+   <div class="panel-heading">
+    <div class="panel-heading-btn">                 
+         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+    </div>
+        <h4 class="panel-title">SU PAGO PARCIAL ES DE $ <%=importe_total %></h4>
+   </div>             
+        <div class="panel-body bg-aqua text-white" id="panel-body-pago">
+        </div>
+    </div>
+</div>

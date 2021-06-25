@@ -1,0 +1,66 @@
+<% 
+var rs=ls.toJSON()
+var columnas = _.uniq(_.pluck(rs, 'descripcion'));
+var accesos = _.uniq(_.pluck(rs, 'id_acceso'));
+%>
+<div class="row">
+    <div class="col-md-12">
+     <a href="javascript:;" class="btn btn-white btn-sm" id="btn-agregar">AGREGAR</a>
+     </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+<table id="data-table-lista" class="table table-striped table-bordered responsive nowrap" width="100%">
+    <thead>
+        <tr>
+            <% for(c in columnas){%>
+            <th><%=columnas[c]%></th>                                
+            <% } %>
+            <th>-</th>
+        </tr>
+        
+    </thead>
+    <tbody>
+    <% for(f=0;f<accesos.length;f++){
+    var id_acceso=accesos[f]
+    %>
+    <tr>
+    <%
+    for(c=0;c<columnas.length;c++){
+    var celda=ls.findWhere({id_acceso:id_acceso,descripcion:columnas[c]})    
+    var campo_tipo=celda.get('campo_tipo')
+    switch(campo_tipo){
+    case "clave":
+    %>
+    <td >********</td>
+    <%
+    break;
+    case "link":
+    %>
+    <td ><a href="<%=celda.get('valor')%>" target="_blank"><%=celda.get('valor')%></a></td>
+    <%
+    break;
+    default:%>
+    <td ><%=celda.get('valor')%></td>
+    <%
+    }
+    %>
+    
+    <%}%>
+        <td><a href="javascript:;" class="btn btn-white btn-xs" name="acceso" id="acceso-<%=id_acceso %>"><i class="fa fa-eye"></i></a></td>
+    </tr>    
+    <%}%>
+    </tbody>
+    <tfoot>
+        <tr>
+            <% for(c in columnas){%>
+            <td><%=columnas[c]%></td>                                
+            <% } %>
+            <td>-</td>
+        </tr>
+    </tfoot>
+</table>
+    </div>
+</div>
+</div>

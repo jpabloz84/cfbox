@@ -1,0 +1,66 @@
+<div class="modal-header">
+ <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="classModalLabel">
+    Complete los premios para {item}
+    </h4>
+</div>
+              <div class="modal-body">
+                    
+
+
+               <form  action="/" method="POST"  autocomplete="off" >
+                    <div class="form-group">
+                     <label>Seleccione un item a aplicar premio</label>
+                     <select class="form-control" id="inp_id_item_tipo">
+                          <% 
+
+                            for(i in items_bingo.models){
+                            
+                            var o=items_bingos.models[i]
+                            %><option value="<%=o.get('id')%>"  ><%=o.get('descripcion')%></option>
+                            }
+                          %>                             
+                     </select>           
+                    </div>
+                    <div class="form-group">
+                     <label>Tipo de premio</label>
+                     <select class="form-control" id="inp_id_tipo">
+                          <% 
+                            for(i in premios_tipos.models){
+                            var o=premios_tipos.models[i]
+                            var selected=(premio_parametro.get('id_tipo')==o.get("id"))?"selected='selected'":""
+                            %><option value='<%=o.get('id')%>' <%=selected%>><%=o.get('descripcion')%></option>
+                            }
+                          %>                             
+                     </select>           
+                    </div>
+                    <div class="form-group">
+                    <label>Detalle</label>
+                    <input type="text" class="form-control" id="inp_valor_money" placeholder="$0.00"  value="<%=premio_parametro.get('valor')%>" />
+                    <input type="text" class="form-control" id="inp_valor_text" placeholder="ingrese un detalle" <%=premio_parametro.get('valor')%> />
+                    </div>
+                    <div class="form-group">
+                    <label>Imagen del premio</label>
+                    <div class="input-group">
+                    <span class="input-group-btn">
+                    <span class="btn btn-default btn-file">
+                    seleccionar… <input type="file" id="imgInp">
+                    </span>
+                    </span>
+                    <input type="text" class="form-control" readonly>
+                    </div>
+                    <img id='img-upload' src='<%=premio_parametro.get('imagen') %>'/>
+                   </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+               <div class="row">
+                    <div class="col-md-9">
+                    </div>            
+                    <div class="col-md-3">
+                          <button type="button" class="btn btn-sm btn-primary" id='btn-guardar-item' nro_premio='<%=premio_parametro.get('nro_premio') %>'>
+                                        GUARDAR
+                          </button>                
+                    </div>            
+                </div>
+               </div>

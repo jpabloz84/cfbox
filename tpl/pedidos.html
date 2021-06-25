@@ -1,0 +1,70 @@
+<%
+var colpedido="Sin pedidos encontrados"
+    if(nro_pedido!=""){
+        colpedido="pedido "+format_number(nro_pedido,'00000000')
+    }else{
+        if(fecha==""){
+        colpedido=""
+        }else{
+            if(ls.length>0){
+             var dia=ls[0].get('dia')
+             var diastr=ls[0].get('diastr')
+             var messtr=ls[0].get('messtr')
+             var anio=ls[0].get('anio')
+             colpedido=diastr+', '+dia+' de '+messtr+' '+anio
+            }    
+        }    
+    }
+    
+    %>
+<h5><%=colpedido%></h5>
+<div class="table-responsive">
+<table id="data-table" class="table  table-condensed table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>PEDIDO</th>
+                                <th>CLIENTE</th>                                                                        
+                                <th>ENVIO</th>                                           
+                                <th>ESTADO</th>
+                                <th>-</th>                                        
+                            </tr>
+                        </thead>
+                        <tbody>                                                               
+    <% _.each(ls, function(elemento) { 
+    var pedido=""
+    if(fecha=="" || nro_pedido!=""){
+       pedido="N° "+elemento.get('id_pedido')+" fecha "+elemento.get('fechastr')+"hs"
+    }else{
+       pedido=format_number(elemento.get('id_pedido'),'00000000')+" - "+elemento.get('horario')+" hs"    
+    }
+
+    var domicilio=""
+    if(elemento.get('id_tipo_envio')=="1"){
+     domicilio=elemento.get('calle')+" "+elemento.get('nro')
+     if(elemento.get('piso')!=""){
+        domicilio+=" piso "+elemento.get('piso')
+     }
+     if(elemento.get('depto')!=""){
+        domicilio+=" depto "+elemento.get('depto')
+     }
+     if(elemento.get('resto')!=""){
+        domicilio+=" resto "+elemento.get('resto')
+     }
+    }else{
+        domicilio+=" retira en "+elemento.get('sucursal')
+    }
+    var estado=elemento.get('estado_desc')
+    var btnclass=elemento.get('btnclass')
+    %>
+    <tr class="<%=btnclass%>">   
+        <td><%=pedido%></td>     
+        <td><%=elemento.get('strnombrecompleto') %></td>
+        <td><%=domicilio %></td>
+        <td><button type="button" class="btn btn-xs btn-inverse" name='estado' id="estado-<%=elemento.get('id_pedido')%>"><%=estado%></button></td>
+        <td><button type="button" class="btn btn-xs btn-inverse" name='ver' id="view-<%=elemento.get('id_pedido')%>">VER</button>            
+        </td>
+    </tr>
+    <% }); %>
+    </tbody>
+</table>
+</div>

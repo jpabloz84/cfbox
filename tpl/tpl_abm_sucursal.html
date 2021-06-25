@@ -1,0 +1,114 @@
+ <!-- begin col-12 -->
+        <div class="col-md-12" id="data-table-sucursales">  
+            <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">                 
+                    <a href="javascript:;" class="btn btn-xs btn-primary savesucursal"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> guardando..." >GUARDAR</a>
+                    <a href="javascript:;" class="btn btn-xs btn-success addsucursal" >AGREGAR</a>
+                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">SUCURSALES</h4></div>             
+                   <div class="panel-body" id="panel-body-sucursales-abm">
+                         <table id="data-table" class="table table-striped table-bordered nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>SUCURSAL</th>                                        
+                                <th>DIRECCION</th>                                        
+                                <th>TELEFONO</th>                                        
+                                <th>PROVINCIA - LOCALIDAD</th>
+                                <th>RESPONSABLE</th>
+                                <th>MAPA</th> 
+                                <th>EMAIL</th>
+                                <th>TIPO SUCURSAL</th>     
+                                <th></th>                                   
+                            </tr>
+                        </thead>
+                        <tbody>                                                               
+                            <% _.each(sucursales.models, function(elemento) {
+
+                            var id_sucursal=elemento.get("id_sucursal")
+                            
+                            var cid=elemento.cid
+                            var sucursal=elemento.get("sucursal")
+                            var direccion=elemento.get("direccion")
+                            var id_loc=elemento.get("id_loc")
+                            var id_pro=elemento.get("id_pro")
+                            var telefono=elemento.get("telefono")
+                            var email=elemento.get("email")
+                            var responsable_legal=elemento.get("responsable_legal")
+                            var mapa=elemento.get("mapa")
+                            var id_tipo_sucursal=elemento.get("id_tipo_sucursal")
+                            var oprovincia=(oprovincias.where({id_pro:id_pro}))[0]
+                            oprovincia.cargarlocalidades() 
+                            var localidades=oprovincia.localidades
+                            %>
+                            <tr >        
+                                <td><input type="text" class="form-control" id="sucursal-<%=cid%>" value="<%=sucursal%>" /></td>
+                                <td><input type="text" class="form-control" id="direccion-<%=cid%>" value="<%=direccion%>" /></td>
+                                <td><input type="text" class="form-control" id="telefono-<%=cid%>" value="<%=telefono%>" /></td>
+                                <td><div class="row">
+                                        <div  class="col-md-6">
+                                        <select class="form-control" id="provincia-<%=cid%>">
+                                            <%
+                                            for(p in oprovincias.models){
+
+                                            var id_pro_local=oprovincias.models[p].get("id_pro")
+                                            var descripcion_pro=oprovincias.models[p].get("descripcion_pro")
+                                            var checkedprovincia=(id_pro==id_pro_local)?"selected='selected'":""%>
+                                            <option value="<%=id_pro_local%>" <%=checkedprovincia%>>
+                                                <%=descripcion_pro%>                                                    
+                                            </option>
+                                            <%}
+                                            %>
+                                            
+                                        </select>
+                                        </div>
+                                        <div  class="col-md-6">
+                                            <select class="form-control" id="localidad-<%=cid%>">
+                                                <%
+                                            for(p in localidades.models){
+                                            var id_loc_local=localidades.models[p].get("id_loc")
+                                            var descripcion_loc=localidades.models[p].get("descripcion_loc")
+                                            var checkedlocalidad=(id_loc==id_loc_local)?"selected='selected'":""%>
+                                            <option value="<%=id_loc_local%>" <%=checkedlocalidad%>>
+                                                <%=descripcion_loc%>                                                    
+                                            </option>
+                                            <%}
+                                            %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                </td>
+                                <td><input type="text" class="form-control" id="responsable_legal-<%=cid%>" value="<%=responsable_legal%>" /></td>
+                                 <td>
+                                    <textarea class="form-control" id="mapa-<%=cid%>" ><%=mapa%></textarea>
+                                 </td>
+                                  <td><input type="text" class="form-control" id="email-<%=cid%>" value="<%=email%>" /></td>
+                                <td>
+                                      <select class="form-control" id="id_tipo_sucursal-<%=cid%>">
+                                            <%
+                                            for(p in osucursales_tipo.models){
+                                            var id_tipo_sucursal_local=osucursales_tipo.models[p].get("id_tipo_sucursal")
+                                            var tipo=osucursales_tipo.models[p].get("tipo")
+                                            var checkedtipo=(id_tipo_sucursal_local==id_tipo_sucursal)?"selected='selected'":""%>
+                                            <option value="<%=id_tipo_sucursal_local%>" <%=checkedtipo%>>
+                                                <%=tipo%>                                                    
+                                            </option>
+                                            <%}
+                                            %>
+                                            
+                                        </select>       
+                                </td>
+                                <td>
+                                    <button type="button" class="close" aria-hidden="true" name="remove" id="remove-<%=cid%>">×</button>
+                                </td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                </div>
+                <!--div body-->
+           </div>
+        </div>
+        <!-- end col-12 -->

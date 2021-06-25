@@ -1,0 +1,121 @@
+<% var oempates=empates.models 
+var id_premio_definicion=0
+%>
+
+
+<div class="modal-header">
+    <%if(oempates.length ==0){%>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <% }%>
+<h4 class="modal-title" id="classModalLabel">
+NOVEDADES
+</h4>
+</div>
+    <div class="modal-body"> 
+   <%  if(ganadores.length>0){ %>
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">HAY GANADORES</h3>
+      </div>
+      <div class="panel-body">
+         <div class="table-responsive">
+                        <table class="table table-bordered table-ganador">
+                        <thead>
+                            <tr>
+                            <th>NOMBRE</th>
+                            <th>PREMIO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           <% 
+                           var oganadores=ganadores.models
+                           var datosganador=""
+                           var premio_item=""
+                            if(oganadores.length>0){ 
+                                _.each(oganadores, function(og){ 
+                                datosganador=og.get("strnombrecompleto").toUpperCase()
+                                premio_item=og.get("item").toUpperCase()
+                            %>
+                            <tr>
+                                <td><%=datosganador %></td>
+                                <td><%=premio_item %></td>
+                            </tr>
+                              <% }) 
+                              }
+                               %>
+                         </tbody>   
+                        </table>
+           </div>             
+      </div>
+    </div>
+<%
+  }
+
+if(oempates.length >0){      
+%>
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">HAY EMPATES PARA UNO O MAS PREMIOS - DEFINICIÓN POR NUMERO MÁS ALTO</h3>
+      </div>
+      <div class="panel-body">
+            <div class="table-responsive">
+                        <table class="table table-empate">
+                        <thead>
+                            <tr>
+                            <th>CARTÓN</th>
+                            <th>DISPUTA</th>
+                            <th>SORTEO</th>
+                            <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <%   var tabindex=1;
+                        _.each(oempates, function(oe){
+                                 id_premio_definicion=oe.get("id_premio_definicion")
+                                 datosganador=oe.get("strnombrecompleto").toUpperCase()
+                                 premio_item=oe.get("item").toUpperCase() 
+                                 carton=format_number(oe.get("id_carton"),"00000000")
+                                 disponibles=oe.get("premio_item_disponibles")
+                                 %>
+                            <tr>
+                                <td><%=carton%> - <%=datosganador%></td>
+                                <td><%=premio_item%> (<%=disponibles %> disponibles)</td>
+                                <td>                                    
+                                      <input type="number"  class="form-control number"  premiodef="<%=id_premio_definicion%>"  name="chksel" placeholder="N°"  tabindex="<%=tabindex%>"/>
+                                    
+                                </td>
+                                <td>
+                                  <img src="" style="height:110px;width:auto;" premiodef="<%=id_premio_definicion%>"  >
+                                </td>
+                            </tr>
+                        <%
+                        tabindex++
+                      }) 
+                      %>
+                         </tbody>   
+                        </table>
+           </div>
+      </div>
+    </div>
+   <%
+}
+ %>
+</div>
+<div class="modal-footer">
+   <div class="row">      
+        <div class="col-md-9">
+        </div>            
+        <div class="col-md-3">
+            <% if(oempates.length>0){%>
+             <button type="button" class="btn btn-sm btn-primary" id='btn-guardar-seleccion' data-loading-text="<i class='fa fa-spinner fa-spin '></i> procesando..." >
+                            ASIGNAR GANADORES
+              </button>
+            <%}else{%>
+            <button type="button" class="btn btn-sm btn-danger" id='btn-cerrar' >
+                            CERRAR
+              </button>
+            <%}%>
+                              
+        </div>            
+    </div>
+</div>

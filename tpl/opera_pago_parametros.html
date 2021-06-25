@@ -1,0 +1,46 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Completar información</h4>
+        </div>
+        <div class="modal-body">
+            <% _.each(campos, function(elemento){ 
+            var valor=elemento.get("valor")
+            %>
+            <div class="form-group">
+               <div class="col-md-5">
+                <%=elemento.get("descripcion")%>
+               </div>
+               <div class="col-md-7">                                
+                <% var parametro=elemento.get("parametro")
+                    if(parametro =='id_tarjeta' || parametro =='id_banco')
+                    { %><select id="<%=elemento.get('parametro')%>" class="form-control">
+                        <%
+                        var combo=(parametro=='id_tarjeta')? tarjetas:bancos;                        
+                        _.each(combo, function(t) {
+                            
+                            if(t.get('id')==valor)
+                            {
+                            %><option value="<%=t.get('id')%>" selected="selected"><%=t.get('descripcion')%>                                
+                            </option><%        
+                            }else{
+                            %><option value="<%=t.get('id')%>">
+                                <%=t.get('descripcion')%>                                    
+                              </option>
+                            <%
+                            }
+                        })
+                        %></select><%
+                    }else{%><input type='text' class="form-control" id="<%=elemento.get('parametro')%>" value="<%=valor%>" /><%
+                    }%>
+               </div>
+            </div>
+            <% })%>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Cerrar</a>
+            <a href="javascript:;" class="btn btn-sm btn-success" id="save-params">Guardar</a>
+        </div>
+    </div>
+</div>

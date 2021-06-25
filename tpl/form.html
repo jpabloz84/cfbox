@@ -1,0 +1,174 @@
+<div class="col-md-12" >  
+    <div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+        </div>
+        <h4 class="panel-title">
+            <% 
+            var cpID=_.find(campos,function(e){return e.get('identificador')==true})
+            var identificador=(typeof cpID!='undefined')?cpID.get('valor'):''
+            if(modo != "E" && modo != "A"){%>
+            Mostrando datos - ID <%=identificador%>
+            <% }else{ %>
+            <%=(modo=='E')?'Editando datos - ID ' + identificador + ' - (*) campos obligatorios':'Alta de datos - ID ' + identificador + ' - (*) campos obligatorios' %>
+            <%}%>
+        </h4>                
+    </div>             
+    <div class="panel-body" id="panel-body-view">
+    <form class="form-horizontal form-bordered" id="form-view">                                                           
+        <input   type="hidden" id="modo" name="modo" value="<%=modo%>" />
+        <div class="wrapper bg-silver-lighter">
+            <!-- begin btn-toolbar -->
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <button type="button" id="volverElemento" class="btn btn-sm btn-inverse">Volver <i class="fa fa-reply"></i></button>                              
+                    <%                 
+                if( _.contains(permite, 'D') && (modo=='V' || modo=='E'))
+                { %>
+                <button type="button" id="eliminarElemento"  class="btn btn-danger btn-sm p-l-20 p-r-20"">Eliminar <i class="fa fa-trash"></i></button>
+                <%
+                }
+                %>
+                <% if(modo != 'V'){%>
+            <button type="submit" class="btn  btn-primary btn-sm" >Guardar <i class="fa fa-save"></i></button>
+            <%} else {
+            
+                if( _.contains(permite, 'E'))
+                {%>
+                <button type="button" class="btn btn-primary btn-sm" id="editarElemento">Editar <i class="fa fa-file"></i></button>
+                <%
+                }            
+            }%>
+               
+                </div>
+            </div>
+            <!-- end btn-toolbar -->
+        </div>            
+        <%  _.each(campos, function(cmp) {          
+            var type='text';
+            if(cmp.get('tipo')=='checkbox')
+            {
+                type='checkbox'
+            }
+            if(cmp.get('tipo')=='select' || cmp.get('tipo')=='multiselect')
+            {
+                type='select'
+            }
+
+            if(cmp.get('tipo')=='longtext')
+            {
+                type='longtext'
+            }
+
+            if(cmp.get('identificador')==true)
+            {%>
+            <input type="hidden" name="identificador" value="<%=cmp.get('nombre')%>" id="identificador" />
+             <%}
+
+            if(cmp.get('tipo')!='hidden'){%>
+            <div class="form-group">
+            <label class="control-label col-md-4 text-center"><%=cmp.get('etiqueta')%> <%=(cmp.get('obligatorio'))?' - (*)':''%></label>        
+            <%    if(modo == "V"){ 
+                    if(cmp.get('tipo')=='image'){
+            %>
+            <a class="media-center" href="javascript:;">
+            <img src="<%=cmp.get('valor')%>" alt="" class="media-object rounded-corner">
+            </a>
+                    <% }else{ %>
+            <label class="col-md-8 control-label text-left">
+                <% 
+                var strvalue=''
+                
+                    if(cmp.get('tipo')=='select' || cmp.get('tipo')=='multiselect')
+                    {
+                        var coleccion=cmp.get('coleccion').models;
+                         _.each(coleccion, function(col) {                         
+                         if(col.get('id')==cmp.get('valor'))
+                         {
+                         strvalue+=((strvalue=='')?col.get('descripcion'):', '+col.get('descripcion'))  
+                         }
+                     })
+                     
+                    }
+                    if(cmp.get('tipo')=='checkbox')
+                    {
+                    strvalue=(cmp.get('valor')==true)?'SI':'NO'
+                    }
+
+
+                    if(cmp.get('tipo')=='text')
+                    {
+                    strvalue=cmp.get('valor')
+                    }
+
+                    if(cmp.get('tipo')=='datetime')
+                    {
+                    strvalue=cmp.get('valor')
+                    }
+
+                    if(cmp.get('tipo')=='money')
+                    {
+                    strvalue='$'+cmp.get('valor')
+                    }
+
+                    if(cmp.get('tipo')=='int')
+                    {
+                    strvalue=cmp.get('valor')
+                    }
+                    if(cmp.get('tipo')=='image')
+                    {
+                    strvalue=cmp.get('valor')
+                    }
+                    if(cmp.get('tipo')=='longtext' && cmp.get('valor')!=null)
+                    {
+                    strvalue=cmp.get('valor').replace(/\n/g,'<br/>')
+                    }
+                 %>
+                 <%=strvalue%>
+                </label>
+            <%   } 
+        }else{%>
+            <div class="col-md-8">                                
+                    <% if(type=='select'){
+                        var coleccion=cmp.get('coleccion').models; 
+                        var readonly=(cmp.get('readonly')==true)?"readonly":"";
+                        var multiple=(cmp.get('tipo')=='multiselect')?"multiple='multiple'":"" 
+                        %>
+                        <select class="form-control" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" <%=multiple%>  <%=readonly%> >
+                            <option value=""></option>
+                        <%  _.each(coleccion, function(col) {
+                        var selected=(col.get('id')==cmp.get('valor'))?"selected='selected'":"";
+                        var opcion_desc=col.get('descripcion');
+                         %>
+                        <option value="<%=col.get('id')%>"  <%=selected%>  ><%=opcion_desc%></option>
+                        <% })%>
+                        </select>
+                    <%}else{
+                        if(cmp.get('tipo')=='longtext'){
+                        %>
+                    <textarea class="form-control"  rows="4" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>"  <%=(cmp.get('readonly')==true)?'readonly':''%>  >
+                        <%=cmp.get('valor')%>
+                    </textarea>
+                    <%
+                        }else{
+                    %>
+                    <input  class="form-control" type="<%=type%>" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" value="<%=cmp.get('valor')%>"   <%=(type=='checkbox' && cmp.get('valor')==true)?"checked='checked'":"" %>  <%=(cmp.get('readonly')==true)?'readonly':''%> />
+                    <%}
+                    }
+                    %>        
+            </div>            
+            <%}
+            %></div><%
+        }else
+        {%>
+        <input   type="<%=cmp.get('tipo')%>" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" value="<%=cmp.get('valor')%>" <%=(cmp.get("readonly")==true)?"readonly":""%> />
+        <%} %>
+        
+        <%}) %>        
+        
+    </form>
+     </div>
+  </div>
+</div>

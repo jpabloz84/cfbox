@@ -1,0 +1,131 @@
+<%
+
+    var domicilio=""
+    var estado=""
+    var pedidostr="N° "+pedido.get('id_pedido')+" fecha "+pedido.get('fechastr')+"hs"
+    if(pedido.get('id_tipo_envio')=="1"){
+     domicilio=pedido.get('calle')+" "+pedido.get('nro')
+     if(pedido.get('piso')!=""){
+        domicilio+=" piso "+pedido.get('piso')
+     }
+     if(pedido.get('depto')!=""){
+        domicilio+=" depto "+pedido.get('depto')
+     }
+     if(pedido.get('resto')!=""){
+        domicilio+=" resto "+pedido.get('resto')
+     }
+      if(pedido.get('descripcion_loc')!=""){
+        domicilio+="  ("+pedido.get('descripcion_loc')+")"
+     }
+    }else{
+        domicilio+=" retira en "+pedido.get('sucursal')+" "+pedido.get('sucursal_direccion')+" ("+pedido.get('localidad_sucursal')+")";
+    }
+
+    var telefono=""
+    var strwhatsapp=""
+    var estado=pedido.get('estado_desc')
+    var id_comp = +pedido.get('id_comp')
+    var pathcomp=pedido.get('path_comp')
+    var btnclass=pedido.get('btnclass')
+    var msgcomp=""
+    var btntextfacturar="FACTURAR"
+    if(id_comp>0){
+        btntextfacturar="EDITAR COMPROBANTE"
+        msgcomp="<a class='btn btn-xs btn-info' href='"+base_url+pathcomp+"'  target='_blank'>(comp "+id_comp.toString()+")</a>"
+    }
+    if(pedido.get("telefono")!=null){
+        telefono=pedido.get("telefono")
+        strwhatsapp="https://api.whatsapp.com/send?phone=54" + telefono + "&text="
+    }
+    %>
+
+ <!-- begin col-12 -->
+<div class="col-md-12">  
+<div class="panel panel-inverse">
+<div class="panel-heading">
+                <div class="panel-heading-btn">                    
+                 <a href="javascript:;" class="btn btn-xs btn-success" id="btn-facturar" ><i class="fa fa-shopping-cart"></i> <%=btntextfacturar%></a>
+                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger btn-cerrar"  data-original-title="" title="" data-init="true"><i class="fa fa-times"></i></a>
+                </div>
+                <h4 class="panel-title">PEDIDO <%=pedidostr%></h4>
+</div> 
+<div class="panel-body" id="panel-body">
+    <input type="hidden" id="id_pedido" value="<%=pedido.get('id_pedido')%>" />
+<div class="row">    
+    <div class="col-md-3">
+        <div class="widget widget-stats bg-black">
+                <div class="stats-icon stats-icon-lg"><i class="fa fa-user fa-fw"></i></div>
+                <div class="stats-title">CLIENTE</div>                
+                <div class="stats-desc"><%=pedido.get("strnombrecompleto")%></div>
+       </div>
+    </div>
+    <div class="col-md-5">
+        <div class="widget widget-stats bg-black">
+                <div class="stats-icon stats-icon-lg"><i class="fa fa-truck fa-fw"></i></div>
+                <div class="stats-title">ENVÍO</div>                
+                <div class="stats-desc"><%=domicilio%></div>
+       </div>        
+    </div>    
+
+    <div class="col-md-2">
+        <div class="widget widget-stats bg-black">
+                <div class="stats-icon stats-icon-lg"><i class="fa fa-phone fa-fw"></i></div>
+                <div class="stats-title">TELÉFONO</div>                
+                <div class="stats-desc"> <a href="<%=strwhatsapp%>" target="_blank"><%=telefono%></a></div>
+       </div> 
+    </div>
+    <div class="col-md-2">
+          <div class="widget widget-stats bg-<%=btnclass%>">
+                <div class="stats-icon stats-icon-lg"><i class="fa fa-spoon fa-fw"></i></div>
+                <div class="stats-title">ESTADO DEL PEDÍDO</div>                
+                <div class="stats-desc"><%=estado%> <%=msgcomp%></div>
+        </div> 
+    </div>
+       
+</div>
+<div class="table-responsive">
+<table class="table  table-condensed table-striped" width="100%">
+                        <thead>
+                            <tr><th></th>
+                                <th>PRODUCTO</th>
+                                <th>CANTIDAD</th>                                                                        
+                                <th>PRECIO</th>                                           
+                                <th>TOTAL</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>                                                               
+    <% var total=0;
+        _.each(ls, function(elemento) { 
+    var img=elemento.get('img')
+    var producto=elemento.get('producto')
+    var cantidad=elemento.get('cantidad')
+    var importe_unitario=elemento.get('importe_unitario')
+    var importe_item=elemento.get('importe_item')
+    total+=parseFloat(importe_item)
+    var pathimg=base_url+"assets/img/default.png"
+    var img=elemento.get("img")
+      if(img!=null){
+        pathimg=base_url+img
+      }
+    %>
+    <tr>   
+        <td>
+            <a href="javascript:;" class="pull-left">
+             <img src="<%=pathimg%>" width="40px" alt="<%=producto%>">
+            </a>
+        </td>
+        <td><%=producto%></td>     
+        <td><%=cantidad %></td>
+        <td>$ <%=importe_unitario %></td>
+        <td>$ <%=importe_item %></td>
+        
+    </tr>
+    <% }); %>
+    </tbody>
+</table>
+</div>
+<!--table responsive -->
+<div class="well">Total $<%=total%></div>
+</div>
+<!--panel body -->

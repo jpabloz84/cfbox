@@ -1,0 +1,34 @@
+<%
+var col1width="12"
+var col2width="3"
+ if(tipo==1){
+    col1width="12"
+}else{
+    col1width="9"
+}%>
+<div class="col-md-12">
+    <div class="table-responsive" >
+        <table class="table table-bordered nowrap tblcontrol" width="100%">
+            <%
+             for(tr=1;tr<=10;tr++){%>
+             <tr>
+                <%
+                tdini=(tr<10)?0:1;
+                tdfin=tdini+9;
+                col=(tr==10)?(tr-10):tr;
+                for(td=tdini;td< tdfin;td++){
+                    xy=(td.toString())+col.toString();
+                    
+                    numero=parseInt(xy);
+                    var n=numeros.where({numero:numero})
+                    var classtd=(n.length>0)?'activo':''
+                    %>
+                    <td id="td-<%=numero%>" class="<%=classtd%>"><%=xy%></td>
+                    <%
+                }
+                %></tr><%
+             }
+            %>
+        </table>
+    </div>
+</div>

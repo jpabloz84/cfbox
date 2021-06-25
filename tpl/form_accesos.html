@@ -1,0 +1,155 @@
+<div class="col-md-12" >  
+    <div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+        </div>
+        <h4 class="panel-title">
+            <% 
+            var cpID=_.find(campos,function(e){return e.get('identificador')==true})
+            var identificador=(typeof cpID!='undefined')?cpID.get('valor'):''
+            if(modo != "E" && modo != "A"){%>
+            Mostrando datos de acceso - ID <%=identificador%>
+            <% }else{ %>
+            <%=(modo=='E')?'Editando datos de acceso - ID ' + identificador + ' - (*) campos obligatorios':'Alta de datos de acceso  ' + identificador + ' - (*) campos obligatorios' %>
+            <%}%>
+        </h4>                
+    </div>             
+    <div class="panel-body" id="panel-body-view">
+    <form class="form-horizontal" id="form-view"  enctype="multipart/form-data">
+            <input   type="hidden" id="modo" name="modo" value="<%=modo%>" />
+            <!--form group -->
+            <div class="form-group">  
+                <label class="control-label col-md-3">Acciones</label>
+                <div class="col-md-4">
+                    <div class="btn-group">
+                                <button type="button" id="volverElemento" class="btn btn-sm btn-inverse"> <i class="fa fa-search"> Volver</i></button> 
+                                <button type="button" id="eliminarElemento"  class="btn btn-sm btn-danger"><i class="fa fa-eraser"> Eliminar</i></button>
+                                 <button type="submit" class="btn btn-sm btn-primary" ><i class="fa fa-save"> Guardar</i></button>
+                                  <button type="button" class="btn btn-sm btn-primary" id="editarElemento">
+                                    <i class="fa fa-edit"> Editar</i>
+                                  </button>
+                    </div>
+                </div>
+            </div>   
+            <!--form group -->
+        <%  _.each(campos, function(cmp) {          
+            var type='string';
+            if(cmp.get('tipo')=='checkbox')
+            {
+                type='checkbox'
+            }
+            if(cmp.get('tipo')=='select' || cmp.get('tipo')=='multiselect')
+            {
+                type='select'
+            }
+            if(cmp.get('tipo')=='file')
+            {
+                type='file'
+            }
+            if(cmp.get('tipo')=='readonly')
+            {
+                type='readonly'
+            }
+
+            if(cmp.get('identificador')==true)
+            {%>
+            <input type="hidden" name="identificador" value="<%=cmp.get('nombre')%>" id="identificador" />
+             <%}
+
+            if(cmp.get('tipo')!='hidden'){%>
+            <div class="form-group">
+            <label class="control-label col-md-4"><%=cmp.get('etiqueta')%> <%=(cmp.get('obligatorio'))?' - (*)':''%></label>        
+            <%    if(modo == "V"){
+
+                    switch (cmp.get('tipo')){ case 'image': %>
+            <a class="media-center" href="javascript:;"><img src="<%=cmp.get('valor')%>" alt="" class="media-object rounded-corner"></a>
+                    <% break; case 'file':
+                        var ar=cmp.get('valor').split("/");
+                        var filename=(ar.length>0)?ar[ar.length-1]:'';
+                        if(cmp.get('download')) { %>
+                        <button type="button" class="btn-primary" id="btndownload_<%=cmp.cid%>">
+                            <i class="fa fa-download"></i>
+                            <input type="hidden" name="file_<%=cmp.cid%>" id="file_<%=cmp.cid%>" value="<%=cmp.get('valor')%>">
+                            <span>Descargar</span>
+                        </button>                        
+                        <% }else { %>
+                        <a class="media-center" href="javascript:;"><%=filename%></a>
+                        <% }                     
+                     break; default: %>
+                     <label class="col-md-8 control-label text-left">
+                    <% var strvalue='';
+                        if(cmp.get('tipo')=='select' || cmp.get('tipo')=='multiselect')
+                        {
+                            var coleccion=cmp.get('coleccion').models;
+                             _.each(coleccion, function(col) {                         
+                             if(col.get('id')==cmp.get('valor'))
+                             {
+                             strvalue+=((strvalue=='')?col.get('descripcion'):', '+col.get('descripcion'))  
+                             }
+                            })
+                        }
+                        if(cmp.get('tipo')=='checkbox')
+                        {
+                        strvalue=(cmp.get('valor')==true)?'SI':'NO'
+                        }
+                        if(cmp.get('tipo')=='string')
+                        {
+                        strvalue=cmp.get('valor')
+                        }
+                        if(cmp.get('tipo')=='datetime')
+                        {
+                        strvalue=cmp.get('valor')
+                        }
+                        if(cmp.get('tipo')=='money')
+                        {
+                        strvalue='$'+cmp.get('valor')
+                        }
+                        if(cmp.get('tipo')=='int')
+                        {
+                        strvalue=cmp.get('valor')
+                        }
+                        if(cmp.get('tipo')=='image')
+                        {
+                        strvalue=cmp.get('valor')
+                        }
+                        if(cmp.get('tipo')=='readonly')
+                        {
+                        strvalue=cmp.get('valor')
+                        }
+                 %>
+                 <%=strvalue%>
+                </label>
+            <% }                     
+            } //modo vista
+            else
+            {%>
+            <div class="col-md-8">
+                    <%  switch (type) { case 'select':
+                        var coleccion=cmp.get('coleccion').models; %>
+                        <select class="form-control" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" <%=(cmp.get('tipo')=='multiselect')?"multiple='multiple'":"" %>  >
+                            <option value=""></option>
+                        <%  _.each(coleccion, function(col) { %>
+                            <option value="<%=col.get('id')%>"  <%=(col.get('id')==cmp.get('valor'))?"selected='selected'":""%>  ><%=col.get('descripcion')%></option>
+                        <% })%>
+                        </select>
+                        <% break; case 'file': %>
+                     <input type="file" class="form-control"  id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" accept="<%=cmp.get('accept')%>" />
+                     <% break; case 'readonly': %>
+                     <input type="text" class="form-control"  id="<%=cmp.get('nombre')%>" disabled='disabled'   value="<%=cmp.get('valor')%>" />
+                     <% break;
+                     default: %>
+                    <input  class="form-control" type="<%=type%>" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" value="<%=cmp.get('valor')%>"   <%=(type=='checkbox' && cmp.get('valor')==true)?"checked='checked'":"" %> />
+                    <%}%>        
+            </div>            
+            <%}%></div><%}else{%>
+        <input   type="<%=cmp.get('tipo')%>" id="<%=cmp.get('nombre')%>" name="<%=cmp.get('nombre')%>" value="<%=cmp.get('valor')%>" />
+        <%} %>
+        
+        <%}) %>        
+        
+    </form>
+     </div>
+  </div>
+</div>

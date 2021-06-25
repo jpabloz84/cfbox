@@ -1,0 +1,63 @@
+<div class="col-md-12"> 
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+        </div>
+        <h4 class="panel-title">Premios a entregar
+        </h4>                
+    </div>             
+    <div class="panel-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>PREMIO</th>
+                    <th class="hidden-sm"> - </th>
+                    <th>DETALLE</th>
+                    <th>CARTON ITEM PREMIO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%
+              _.each(premios_parametros.models,function(p){
+              var cid=p.cid
+              var premio_tipo=p.get('premio_tipo')
+              var tipo_dato=p.get('tipo_dato')
+              var editar=(p.get('editar'))?1:0
+              var imagen=(p.get('imagen')==null)?'':p.get('imagen')
+              var src=base_url+'assets/img/icon-premio-64.jpg'
+              var istext=(tipo_dato=='text')?1:0
+              if(tipo_dato=='money'){
+              src=base_url+'assets/img/icon-pesos-96.png'
+              }else{
+                if(imagen!=""){
+                 src=(imagen.indexOf("base64")>=0)?imagen:(base_url+imagen)
+                }
+              }
+
+              %>
+              <tr>
+                    <td><%=p.get("numero")%> - <%=p.get("tipo")%></td>
+                    <td class="hidden-sm">
+                      <a href="javascript:;">
+                        <img src="<%=src%>" alt="<%=premio_tipo%>" id="img-param-<%=cid%>" class="img-fluid img-thumbnail" data-img="<%=src%>" title="imagen" data-toggle="popover" style="height:64px;width: auto"  />
+                      </a>
+                    </td>
+                    <td>
+                      <h6><%
+                        var valor=p.get("valor")
+                        if(tipo_dato=='money'){
+                        valor="$ "+valor;
+                        }
+                        %>
+                        <%=valor%>            
+                        </h6>
+                    </td>
+                    <td>carton nro <%=p.get("id_carton")%> - <%=p.get("item")%></td>
+                </tr>
+                <%})%>
+                                     
+                </tbody>
+              </table>
+        </div>
+      </div>
+  </div>
