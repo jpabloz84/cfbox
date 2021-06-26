@@ -592,7 +592,7 @@ function generar()
 	 		}
 	 		
 	 		//generare una orden de pago (no va a afip)	 		
-			if(($estado=='E' || $estado=='F') && $id_pedido>0){				
+			if(($campos['estado']=='E' || $campos['estado']=='F') && $id_pedido>0){				
 			 	$this->mpedidos->facturar_pedido($id_pedido,$id_comp,$this->visitante->get_id_empresa());	
 			 	if($this->mpedidos->numError()!=0)
 			 		{	

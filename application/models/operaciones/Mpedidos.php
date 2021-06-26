@@ -72,8 +72,8 @@ public function facturar_pedido($id_pedido,$id_comp,$id_empresa){
     $this->descError="no se encontro el pedido";
     return $exito;
   }
- 
- $this->db->query("update checkout_presupuesto set id_comp=$id_comp where id_pedido=$id_pedido");
+ //marco como recibido
+ $this->db->query("update checkout_presupuesto set estado='S', id_comp=$id_comp where id_pedido=$id_pedido");
  $error=$this->db->error();
   if (isset($error['code']) && $error['code']!=0) {                
   $this->numError=$error["code"];
