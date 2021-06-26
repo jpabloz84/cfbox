@@ -204,7 +204,7 @@ olista=new CheckoutclientesView({el:$('#tpl-table-query'),base_url:"<?=base_url(
     }
     return teclaentero(e)
 });     
- 
+ consultar()
 }//inicializacion contexto
 
 

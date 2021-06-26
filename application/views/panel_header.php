@@ -33,6 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
 	<input type="hidden" id="last_nro_pedido" value="<?=$last_nro_pedido?>">
+	<input type="hidden" id="base_url_parent" value="<?=base_url()?>">
 	<div class="pace  pace-inactive">
 		<div class="pace-progress" data-progress-text="100%" data-progress="99" style="width: 100%;">
         <div class="pace-progress-inner"></div>

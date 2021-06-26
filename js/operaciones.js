@@ -1083,7 +1083,7 @@ oComp.save(null,{wait: true,
                                     //actualizo y muestro saldo (si corresponde)
                                      oCliente.getsaldo();
                                      mostrar_saldo();
-                                     debugger
+                                     
                                     afipcmp=params.data.afipcmp;
                                     var strcompafip=""
                                     if(typeof afipcmp.nro_comp !="undefined")
@@ -1126,7 +1126,7 @@ oComp.save(null,{wait: true,
                                     }
 
                                     
-                                        
+                                    
                                     
 
 

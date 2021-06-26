@@ -42,7 +42,8 @@ var Pago=Backbone.Model.extend({
 
 var Pagos=Backbone.Collection.extend({
     model:Pago,
-    load:function(comp){        
+    load:function(comp){    
+        
      //dado el parameotro (array del comprobante) ,agrego los pagos y cargo los pagos en funcion de lo imputado
      var tp=new Tipopagos();
      var tienepagocc=false;
@@ -57,14 +58,14 @@ var Pagos=Backbone.Collection.extend({
        }
         //dado un comprobante, se auto carga los pagos
         var rsp=ofwlocal.get("vercomp_pagos",Array("*"),"id_comp="+id_comp+" and estado<>'A'","propio desc");
-      for(i in rsp){
+      for(i in rsp){        
         var arrcomp_pagos=Array();
         var monto_disabled=false;
         var id_tipo_pago=parseInt(rsp[i]['id_tipo_pago'])        
             arrcomp_pagos.push(parseInt(rsp[i]['id_comp_pago']));
         var monto_abona=parseFloat(rsp[i]['pago'])
         var monto_afectado=parseFloat(rsp[i]['monto'])
-        var estado_pago=parseFloat(rsp[i]['estado_pago'])
+        var estado_pago=rsp[i]['estado_pago']
         var token=rsp[i]['token']
         var propio=(rsp[i]['propio']==1)?true:false;
         if(id_tipo_pago==7)tienepagocc=true;
