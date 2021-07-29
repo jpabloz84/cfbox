@@ -21,7 +21,7 @@ private $id_usuario;
     /*cargo las definiciones de consultas sql*/
     $this->listener->load_defs($this->mpedidos->definiciones($this->visitante->get_id_empresa()));
 	}
-	 function index()
+	 function index($id_pedido=0)
 	{	
 
 
@@ -35,7 +35,7 @@ private $id_usuario;
 		$arrVariales=array();
 		$arrVariales['visitante']=$this->visitante;	
 		$arrVariales['estados']	=$this->mpedidos->estados();
-		
+		$arrVariales['id_pedido']=$id_pedido;
 		$this->load->view('operaciones/vpedidos',$arrVariales);
 		
 	}	
@@ -92,7 +92,7 @@ private $id_usuario;
 
   }
 
-  function guardar(){
+  /*function guardar(){
 		if(!$this->loginOn() || !$this->visitante->permitir('prt_pedidos',2))
 		{
 			$this->fwxml->numError=0;
@@ -133,7 +133,7 @@ private $id_usuario;
     }
     
 		$this->fwxml->ResponseJson();
-	}
+	}*/
 
 function cambiarestado(){
 		if(!$this->loginOn() || !$this->visitante->permitir('prt_pedidos',2))
@@ -151,6 +151,90 @@ function cambiarestado(){
 		}
 	$this->fwxml->ResponseJson();
 }
+
+
+ function nuevo()
+	{	
+
+		if(!$this->loginOn() || !$this->visitante->permitir('prt_operaciones',1))
+		{
+			$this->load->view('vlogin');
+			return; 
+		}
+		$arrVariales=array();
+		$arrVariales['visitante']=$this->visitante;
+		$arrVariales['modo']="NP"; //nuevo pedido
+		$arrVariales['origen']="operaciones/pedidos/nuevo/"; //nuevo pedido
+		$this->load->view('operaciones/vconsultas',$arrVariales);
+		
+	}	
+
+	function generar_pedido()
+{
+ 
+  $this->fwxml->numError=0; 
+  $this->fwxml->descError="";
+  $errores=array();
+  
+  $this->load->model("operaciones/mpresupuesto");
+  $this->load->model("entidades/mproductos"); 
+  
+  $fecha=date("Y-m-d H:i:s");
+  $id_empresa=$this->visitante->get_id_empresa();
+  $message="pedido {id_pedido}\r\n";
+  try{
+    
+    
+    $chk=json_decode($this->input->post('chk'),true);
+
+    $carrito=$chk['carrito'];
+    $apellido=$chk['apellido'];
+    $nombres=$chk['nombres'];
+    $telefono=$chk['telefono'];
+    $calle=$chk['calle'];
+    $nro=$chk['nro'];
+    $piso=$chk['piso'];
+    $depto=$chk['depto'];
+    $resto=$chk['resto'];
+    $nota=$chk['nota'];
+    $id_tipo_envio=$chk['id_tipo_envio'];
+    $id_localidad=$chk['id_localidad'];
+    $id_tipo_pago=$chk['id_tipo_pago'];
+    $id_sucursal=$chk['id_sucursal'];
+    $id_cliente=$chk['id_cliente'];
+    $id_pedido=(isset($chk['id_pedido'])?$chk['id_pedido']:0);
+    //var_dump($carrito);
+    $productos=array();
+
+    
+
+    $presupuesto=array('id_pedido'=>$id_pedido,'id_cliente'=>$id_cliente,'fecha'=>$fecha,'id_empresa'=>$id_empresa,'apellido'=>$apellido,'nombres'=>$nombres,'telefono'=>$telefono,'calle'=>$calle,'nro'=>$nro,'piso'=>$piso,'depto'=>$depto,'resto'=>$resto,'id_tipo_envio'=>$id_tipo_envio,'id_tipo_pago'=>$id_tipo_pago,'id_sucursal'=>$id_sucursal,'id_localidad'=>$id_localidad,'nota'=>$nota);
+    foreach ($carrito as  $p) {
+    $productos[]=array('id_tipo' =>$p['id_tipo'] ,'nro_tipo'=>$p['nro_tipo'],'cantidad'=>$p['cantidad']);
+    }
+    $this->mpresupuesto->mproductos=$this->mproductos;
+      $id_pedido=$this->mpresupuesto->generar_presupuesto($presupuesto,$productos,$id_empresa,$fecha,$errores);
+      if($this->mpresupuesto->numError()!=0){
+        $this->fwxml->numError=$this->mpresupuesto->numError();
+        $this->fwxml->descError=$this->mpresupuesto->descError();
+        if($this->fwxml->numError==1000){
+          $this->fwxml->arrResponse['error_productos']=$errores;//devuelvo que productos tienen errores
+        }
+      }else{
+        $mensaje=$this->mpresupuesto->getmessage($id_pedido);
+        $this->fwxml->arrResponse['mensaje']=$mensaje;        
+        $this->fwxml->arrResponse['id_pedido']=$id_pedido;
+       
+      }
+  }catch (Exception $e){
+     $this->fwxml->numError=1;
+     $this->fwxml->descError=$e->getMessage(); 
+  }  
+  salir:
+  $this->fwxml->ResponseJson();   
+}//generar_pedido
+
+
   
 	
 

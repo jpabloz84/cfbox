@@ -28,20 +28,16 @@ var oComp=null;
 var id_empresa=$("#id_empresa").val();
 var id_cliente=$("#id_cliente").val();
 var stmtempresa=" and id_empresa="+id_empresa;
-$.getScript(base_fw+'assets/plugins/bootstrap-combobox/js/bootstrap-combobox.js').done(function(){
+
     $.getScript(base_fw+'assets/plugins/DataTables/media/js/jquery.dataTables.min.js').done(function() {
-        
-        
                 $.getScript(base_fw+'assets/js/table-manage-responsive.demo.min.js').done(function() { 
                     $.getScript(base_fw+'assets/plugins/masked-input/masked-input.min.js').done(function(){                        
                             inicializacion_contexto();                        
                         
-                    })
-        
-        
+                    });
         });
     });
-});
+
 
 var eventos = _.extend({}, Backbone.Events);
 
@@ -946,21 +942,13 @@ function eval_check_orden(){
 
 
 //al hace click en btn comprobante pendiente, realiza esta validacion
-function valida_orden()
+/*function valida_orden()
 {
     event.stopPropagation()
 if(oCarrito.models.length!=0)
     {
       var total=$("#total_parcial").html();
-      var strhtml="Usted va a GUARDAR una"        
-        if($("#chkorden").is(":checked"))
-        { 
-            strhtml+=" orden de pedido en PENDIENTE";
-        }else{
-            var id_tipo_comp= $("#id_tipo_comp").val()
-            var tipo_comp_desc=$("#id_tipo_comp option[value='"+id_tipo_comp+"']").text();
-            strhtml+=" "+tipo_comp_desc+" en PENDIENTE ";            
-        }
+      var strhtml="Usted va a generar un pedido "                
          strhtml+=" por $"+total+" pesos. ¿Desea continuar?";
             swal({
           title: "Atención",
@@ -972,12 +960,11 @@ if(oCarrito.models.length!=0)
             }, function () {
             generar_venta('P')
             });
-        
-        }else{
-            //win.alert("No ha ingresado un producto para hacer la venta"," ATENCIÓN",4)    
-            swal("Atención!", "No ha ingresado un producto para hacer la venta", "warning")
+        oc
+        }else{            
+            swal("Atención!", "No ha ingresado un producto para hacer el pedido", "warning")
         }
-}//valida orden
+}//valida orden*/
 
 
 
@@ -1390,9 +1377,7 @@ oCompAnular.save(null,{type:'POST',
                         spinnerEnd($("#panel-body-pago"))
                                 if(params.numerror!=0)
                                 {
-                                   // win.alert("No se realizaron los cambios: "+params.descerror+". Consulte con el administrador"," Error al anular comprobante.",4)
                                    swal("No se realizaron los cambios",params.descerror+". Consulte con el administrador","error")
-                                    
                                 }
                                 else
                                 {   ventagenerada=true;
@@ -1588,8 +1573,11 @@ var btnguardar=""
 var conf_comprobantes=$("#conf_comprobantes").val()
 var conf_guardar_compra=$("#conf_guardar_compra").val()
 var conf_orden_pedido=$("#conf_orden_pedido").val()
-if(conf_guardar_compra=="1"){
-btnguardar="&nbsp;<button type='button' class='btn btn-sm btn-success ' id='btn-pendiente' onclick='valida_orden()'>'<i class='fa fa-save'></i> SOLO GUARDAR</button>"    
+var id_pedido= $("#id_pedido").val()
+if(conf_guardar_compra=="1" || id_pedido=="0"){
+    $("#li-default-tab-pago").hide()
+    $("#li-default-tab-impresiones").hide()
+btnguardar="&nbsp;<button type='button' class='btn btn-sm btn-success ' id='btn-pendiente' onclick='valida_orden()'>'<i class='fa fa-save'></i> GUARDAR PEDIDO</button>"    
 }
 
 var dataloadspinner="data-loading-text=\"<i class='fa fa-spinner fa-spin '></i> procesando...\""

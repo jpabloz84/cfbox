@@ -1,0 +1,83 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          ×
+        </button>
+        <h4 class="modal-title" >Ingrese datos del cliente y envio</h4>
+      </div>
+      <div class="modal-body">
+          <form class="form-horizontal" action="/" method="POST" id="form-vendedor" autocomplete="off" >
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>Nombres(*)</label>
+                        <input type="text" id="inp-nombres" class="form-control" value="">
+                    </div>                    
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>Apellido(*)</label>
+                        <input type="text"  id="inp-apellido" class="form-control" value="">
+                    </div>                    
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label>Telefono</label>
+                        <input type="text"  id="inp-telefono" class="form-control" value="cod. area + número">
+                    </div>                    
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Enviamos a domicilio</label>
+                        <input type="radio"  id="inp-metodo-retiro" class="form-control" value="1">
+                    </div>                    
+                    <div class="col-md-6">
+                        <label>Retira en sucursal</label>
+                        <input type="radio"  id="inp-metodo-retiro" class="form-control" value="2">
+                    </div>                    
+                </div>
+                <div class="form-group" tipo="1">
+                    <div class="col-md-6">
+                        <label>Calle</label>
+                        <input type="text"  id="inp-calle" class="form-control" value="ingrese calle">
+                    </div>                    
+                    <div class="col-md-6">
+                        <label>Nro/altura</label>
+                        <input type="text"  id="inp-nro" class="form-control" value="numero">
+                    </div>                    
+                </div>
+                <div class="form-group" tipo="1">
+                    <div class="col-md-6">
+                        <label>Piso</label>
+                        <input type="text"  id="inp-piso" class="form-control" value="ingrese piso">
+                    </div>                    
+                    <div class="col-md-6" >
+                        <label>Depto</label>
+                        <input type="text"  id="inp-nro" class="form-control" value="dpto">
+                    </div>                    
+                </div>
+                <div class="form-group" tipo="1">
+                    <div class="col-md-12">
+                        <label>Ciudad</label>
+                        <select class="form-control" id="inp-localidad"></select>
+                    </div>               
+                </div>
+                 <div class="form-group" tipo="2">
+                    <div class="col-md-12">
+                        <label>Sucursal</label>
+                        <select class="form-control"></select>
+                    </div>               
+                </div>
+         </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-warning" id="btnactualizarcliente" data-loading-text="<i class='fa fa-spinner fa-spin '></i> actualizando...">
+                    GUARDAR
+                </button>                
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
+                    CERRAR
+                </button>                
+              
+      </div>
+    </div>
+  </div>

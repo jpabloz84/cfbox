@@ -37,6 +37,7 @@ $fecha_actual=date("d/m/Y")
 <!-- begin #content -->
 <div id="content" class="content"> 
     <input type="hidden" id="base_url"  value="<?=base_url()?>" />    
+    <input type="hidden" id="id_pedido_selected"  value="<?=$id_pedido?>" />    
     
     <!-- begin row -->
     <div class="row panelquery">       
@@ -45,8 +46,7 @@ $fecha_actual=date("d/m/Y")
             <div class="panel panel-inverse">
             <div class="panel-heading">
                 <div class="panel-heading-btn">                    
-                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                 <a href="javascript:;" class="btn btn-xs btn-success btn-nuevo-pedido" ><i class="fa fa-list-ol"></i> Nuevo</a>
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
                 </div>
                 <h4 class="panel-title">CONSULTA DE PEDIDOS</h4></div>             
@@ -132,37 +132,12 @@ $fecha_actual=date("d/m/Y")
 
 
 
-<div class="modal fade in" id="modalValidarCuponCUC_QRCode" >
-   <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">ESCANEAR QR</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group col-md-12">
-                    <div id="mainbody">
 
-                        <div id="outdiv" style="text-align: center;">
-                        </div>
-                        <div id="result"></div>
-                        <canvas id="qr-canvas" width="800" height="600"></canvas>
-                        <!--<input class="form-control input-lg" type="text" id="txtCuc_QRCode">-->
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Salir</a>
-                
-            </div>
-        </div>
-    </div>
-</div>
 
  
 
   
-  <script src="<?=base_url()?>js/pedidos.js" type="text/javascript"></script>  
+  <script src="<?=base_url()?>js/pedidos.js?v=1" type="text/javascript"></script>  
   <script src="<?=BASE_FW?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
   <script src="<?=BASE_FW?>assets/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js" type="text/javascript"></script>
 
@@ -204,7 +179,12 @@ olista=new CheckoutclientesView({el:$('#tpl-table-query'),base_url:"<?=base_url(
     }
     return teclaentero(e)
 });     
- consultar()
+ if($("#id_pedido_selected").val()!="" && $("#id_pedido_selected").val()!="0"){
+        consultar($("#id_pedido_selected").val())
+ }else{
+        consultar()   
+ }
+ 
 }//inicializacion contexto
 
 

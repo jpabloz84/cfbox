@@ -1,0 +1,114 @@
+<form class="form-horizontal" action="/" method="POST" id="form-avanzada" autocomplete="off" >
+<div class="form-group">
+    <div class="col-md-4">
+         <label for="nombres"><i class="fa fa-user"></i> Nombres</label>
+         <input type="text" id="nombres" name="nombres" placeholder="ingrese sus nombres" value="<%=checkout.get('nombres')%>"  class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label for="apellido"> Apellido</label>
+        <input type="text" id="apellido" name="apellido" placeholder="ingrese su apellido" value="<%=checkout.get('apellido')%>"  class="form-control">
+    </div>
+    <div class="col-md-4">
+         <label for="telefono"><i class="fa fa-phone"></i> Telefono (sin 0 ni 15)</label>
+            <input type="text" id="telefono" name="telefono" placeholder="cod. area + telefono"  class="form-control" value="<%=checkout.get('telefono')%>">
+    </div>                    
+</div>
+<div class="form-group" >
+    <div class="col-md-12">
+<% _.each(tipos_envios.models,function(envio){
+            var id_tipo_envio=envio.get("id_tipo_envio")
+            var tipo_envio=envio.get("tipo_envio")
+            var checked=(id_tipo_envio==checkout.get("id_tipo_envio"))?"checked='checked'":""
+            %>          
+            <label for="tipo_envio_<%=id_tipo_envio%>"><%=tipo_envio%>
+            <input  type="radio"  name="tipo_envio" value="<%=id_tipo_envio%>" id="tipo_envio_<%=id_tipo_envio%>" <%=checked%>  /></label>
+            <%})%>
+    </div>
+</div>
+<div class="form-group"  tipo_envio="1">
+    <div class="col-md-5">
+          <label for="calle"><i class="fa fa-road"></i> Calle</label>
+            <input type="text" id="calle"  placeholder="Calle" value="<%=checkout.get('calle')%>" class="form-control">
+    </div>
+    <div class="col-md-3"> 
+        <label for="nro">Numero</label>
+        <input type="number" id="nro"  placeholder="numero" value="<%=checkout.get('nro')%>" class="form-control" />
+    </div>
+    <div class="col-md-2"> 
+        <label for="piso">Piso</label>
+        <input type="text" id="piso"  placeholder="piso" value="<%=checkout.get('piso')%>" class="form-control">
+    </div>
+    <div class="col-md-2"> 
+       <label for="nro">Dpto.</label>
+        <input type="text" id="depto"  placeholder="Depto" value="<%=checkout.get('depto')%>" class="form-control">
+    </div>
+</div>
+<div  class="form-group"  tipo_envio="1">
+    <div class="col-md-6"> 
+        <label for="resto">Localidad</label>
+        <select id="id_localidad" tipo_envio="1" class="form-control">
+           <% _.each(localidades.models,function(localidad){
+           var id_localidad=localidad.get("id_loc")
+           var descripcion_loc=localidad.get("descripcion_loc")
+           var selected=(id_localidad==checkout.get("id_localidad"))?"selected='selected'":""
+           %>
+           <option value="<%=id_localidad%>" <%=selected%> ><%=descripcion_loc %></option>
+           <%})%>
+        </select>
+    </div>
+    <div class="col-md-6"> 
+    <label for="resto">¿algún dato de ubicación que agregar?</label>
+    <input type="text" id="resto"  placeholder="cortada, camino, km, etc" value="<%=checkout.get('resto')%>" class="form-control">
+    </div>
+
+</div>
+
+<div class="form-group" tipo_envio="2">
+    <div class="col-md-12"> 
+     <% _.each(sucursales.models,function(suc){        
+                var id_sucursal=suc.get("id_sucursal")
+                var sucursal=suc.get("sucursal")
+                var localidad=suc.get("localidad_sucursal")
+                var direccion=suc.get("direccion")
+                var mapa=suc.get("mapa")
+                var strsucursal=sucursal
+                if(direccion!=""){
+                strsucursal+=" - "+direccion
+                }
+                if(localidad!=""){
+                strsucursal+=" - "+localidad
+                }
+                var selected=(checkout.get("id_sucursal")==id_sucursal)?"checked='checked'":""
+              %>    
+              <label for="suc_<%=id_sucursal%>"><%=strsucursal%>
+                <input type="radio" id="suc_<%=id_sucursal%>" name="sucursal" <%=selected%>  value="<%=id_sucursal%>" >
+              </label>
+                <% })%> 
+    </div>
+</div>
+<div  class="form-group">
+    <div class="col-md-3"> 
+        <label for="id_tipo_pago">Tipo de pago</label>
+        <select class="form-control" id="id_tipo_pago">
+         <% _.each(tipos_pagos.models,function(pg){
+                var id_tipo_pago=pg.get("id_tipo_pago")
+                var tipo_pago=pg.get("tipo_pago")
+                var selected=""
+                if(tipos_pagos.models.length==1 || id_tipo_pago==checkout.get("id_tipo_pago")){
+                selected="selected='selected'" 
+              }
+              %>
+                <option value="<%=id_tipo_pago%>" <%=selected%>><%=tipo_pago%></option>
+         <% })%>    
+        </select>
+    </div>
+    <div class="col-md-9"> 
+    <label for="nota">Nota</label>
+        <textarea id="nota"  placeholder="algun dato que agregar al pedido" class="form-control">
+            <%=checkout.get('nota')%>
+        </textarea>
+    </div>
+</div>      
+
+</form>
+      

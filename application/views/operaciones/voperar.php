@@ -157,6 +157,7 @@ $version = rand(0, 10000);
 <!-- ================== END PAGE LEVEL STYLE ================== -->
 <!-- begin #content -->
 <div id="content" class="content"> 
+    <input type="hidden" id="id_localidad" value="<?=$id_loc_default?>"/>
     <input type="hidden" id="id_cliente" value="<?=$id_cliente?>"/>
     <input type="hidden" id="id_comp" value="<?=$id_comp?>"/>    
     <input type="hidden" id="pagosID" value="<?=$pagosids?>"/>
@@ -528,6 +529,11 @@ $version = rand(0, 10000);
 </div>
 
 
+<div id="modal-cliente-pedido" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+  
+</div>
+
+
 <script type="text/template" id="tpl-select_descuentos">   
 <form class="form-horizontal">                      
   <div class="form-group">
@@ -590,7 +596,7 @@ $version = rand(0, 10000);
 <script src="<?=base_url()?>js/operaciones_mod_recargos.js?v=<?php echo $version ?>"></script>
 <script src="<?=base_url()?>js/operaciones_mod_pagos.js?v=<?php echo $version ?>"> </script>
 <script src="<?=base_url()?>js/operaciones_mod_descuentos.js?v=<?php echo $version ?>"></script>
-
+<script src="<?=base_url()?>js/checkout.js?v=<?php echo $version ?>"></script>
 <!--<script src="<?=base_url()?>js/operaciones_mod_clientes.js"> </script>
 <script src="<?=base_url()?>js/operaciones_mod_recargos.js"></script>
 <script src="<?=base_url()?>js/operaciones_mod_pagosV1.1.js"> </script>

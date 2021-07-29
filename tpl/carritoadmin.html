@@ -57,6 +57,9 @@
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-user fa-fw"></i></div>
                 <div class="stats-title">CLIENTE</div>                
                 <div class="stats-desc"><%=pedido.get("strnombrecompleto")%></div>
+                <div class="stats-link">
+                    <a href="javascript:;" >&nbsp;</a>
+                </div>
        </div>
     </div>
     <div class="col-md-5">
@@ -64,6 +67,9 @@
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-truck fa-fw"></i></div>
                 <div class="stats-title">ENVÍO</div>                
                 <div class="stats-desc"><%=domicilio%></div>
+                <div class="stats-link">
+                    <a href="javascript:;" >&nbsp;</a>
+                </div>
        </div>        
     </div>    
 
@@ -72,6 +78,9 @@
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-phone fa-fw"></i></div>
                 <div class="stats-title">TELÉFONO</div>                
                 <div class="stats-desc"> <a href="<%=strwhatsapp%>" target="_blank"><%=telefono%></a></div>
+                <div class="stats-link">
+                    <a href="javascript:;" >&nbsp;</a>
+                </div>
        </div> 
     </div>
     <div class="col-md-2">
@@ -79,6 +88,9 @@
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-spoon fa-fw"></i></div>
                 <div class="stats-title">ESTADO DEL PEDÍDO</div>                
                 <div class="stats-desc"><%=estado%> <%=msgcomp%></div>
+                <div class="stats-link">
+                    <a href="javascript:;" id="btn-modificar-pedido">Modificar pedido <i class="fa fa-arrow-circle-o-right"></i></a>
+                </div>
         </div> 
     </div>
        

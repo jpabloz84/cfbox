@@ -14,8 +14,8 @@ $version = rand(0, 10000);
     <script type="text/javascript" src="<?php echo base_url(); ?>js/backbone-min.js"></script>
     <script src="<?php echo BASE_FW ?>assets/plugins/sweetalert/sweetalert.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>/js/croppie/croppie.min.js"></script>        
-    <script type="text/javascript" src="<?php echo base_url(); ?>js/backbone-utiles.js?v=1"></script>
-    <script src="<?php echo BASE_FW ?>js/utilesV1.11.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/backbone-utiles.js?v=2"></script>
+    <script src="<?php echo BASE_FW ?>js/utilesV1.12.js"></script>
 	<script src="<?php echo BASE_FW ?>assets/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
 	<script src="<?php echo BASE_FW ?>assets/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
 	<script src="<?php echo BASE_FW ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -32,7 +32,7 @@ $version = rand(0, 10000);
 	<!-- ================== END BASE JS ================== -->
 
 	<!-- ================== BEGIN PAGE LEVEL JS ================== -->
-	<script src="<?php echo BASE_FW ?>assets/js/apps.js"></script>
+	<script src="<?php echo base_url() ?>assets/js/apps.js?v=1"></script>
 	<!-- ================== END PAGE LEVEL JS ================== -->
     <script src="<?php echo base_url(); ?>js/notificaciones.js?v=1"></script>
 	<script>
@@ -41,7 +41,9 @@ var feini='';
 var fefin='';
 
 /*variables de uso global*/
-
+window.localStorage.setItem("id_sucursal",<?=$visitante->get_id_sucursal()?>);
+window.localStorage.setItem("id_empresa",<?=$visitante->get_id_empresa()?>);
+window.localStorage.setItem("id_prov_default",<?=$id_prov_default?>);
 
 var globales=Array();
 var winparent= new fwmodal();
@@ -91,6 +93,13 @@ globales['tarjetas']=new Tarjetas(null,{habilitadas:true});
 globales['tipo_pagos']=new Tipopagos();
 globales['tipo_items']=new Tiposproductos();
 globales['operaciones_tipo']=new Tiposoperaciones();
+globales['sucursales']=new Sucursales();
+var oLocalidades=new Localidades();
+
+oLocalidades.cargarAsync(window.localStorage.getItem("id_prov_default"));
+globales['localidades']=oLocalidades
+
+
 var fecha = new Date();
 feini=fecha.getDate()+"-"+(fecha.getMonth()+1)+"-"+fecha.getFullYear()+" "+fecha.getHours()+":"+fecha.getMinutes()+": "+fecha.getSeconds();
 console.log("Inicio:"+feini);

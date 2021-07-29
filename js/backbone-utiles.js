@@ -506,7 +506,7 @@ model:Tipocomprobante
 var Sucursal=Backbone.Model.extend();
 var Sucursales=Backbone.Collection.extend({
     initialize:function(models,options){    
-        var rs=ofw.get('sucursal',Array('id_sucursal as id','sucursal as descripcion'),'','sucursal asc');
+        var rs=ofw.get('versucursales',Array('*'),'id_empresa='+window.localStorage.getItem("id_empresa")+' and id_tipo_sucursal=1','sucursal asc');
         for(r in rs)
         {var elem=new Sucursal(rs[r]);        
          this.add(elem);
@@ -659,17 +659,6 @@ model:Tipoproducto
 });//Tipocomprobantes
 
 
-var Disciplina=Backbone.Model.extend();
-var Disciplinas=Backbone.Collection.extend({
-    initialize:function(models,options){    
-        var rs=ofw.get('disciplina',Array('nro_disciplina as id','disciplina as descripcion'),'','disciplina asc');
-        for(r in rs)
-        {var elem=new Disciplina(rs[r]);        
-         this.add(elem);
-        }        
-    },
-model:Disciplina
-});//Tipocomprobantes
 
 var Tiposoperacion=Backbone.Model.extend();
 var Tiposoperaciones=Backbone.Collection.extend({
@@ -693,8 +682,35 @@ var Localidad=Backbone.Model.extend({
 
     }
 });
+var Localidades=Backbone.Collection.extend({model:Localidad,
+cargar:function(oprovincia){
+  if(this.models.length>0){
+    return
+  }
+  
+var id_provincia=oprovincia.get('id_pro')
+var rs=ofw.get('sellocalidades',Array(id_provincia),true);
+        for(r in rs)
+        {
+          var elem=new Localidad(rs[r]);        
+         this.add(elem);
+        }
+},//cargar
+cargarAsync:function(id_provincia){
+  this.reset();
+  var that=this
+  ofw.getAsync('localidades',Array("*"),'id_pro='+id_provincia,'',function(rs){
+    
+    for(r in rs)
+        {
+          var elem=new Localidad(rs[r]);        
+         that.add(elem);
+        }
+  });
+        
+}//cargarAsync
+})
 
-var Localidades= Backbone.Collection.extend({model: Localidad}); 
 
 var Provincia=Backbone.Model.extend({
     initialize: function (options) {

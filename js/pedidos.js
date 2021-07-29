@@ -168,7 +168,7 @@ var CarritoView=Backbone.View.extend(
         olist=productos.models  
 
         var that=this
-        $.get(base_url+'tpl/carritoadmin.html', function (data) {
+        $.get(base_url+'tpl/carritoadmin.html?v=1', function (data) {
             tpl = _.template(data, {});
             htmlrender=tpl({ls:olist,pedido:that.options.pedido,base_url:base_url})
             that.$el.html(htmlrender);
@@ -183,7 +183,13 @@ var CarritoView=Backbone.View.extend(
     {
         this.render(this.options.productos)
     },
-    events:{"click #btn-facturar":"facturar","click .btn-cerrar":"cerrar"
+    events:{"click #btn-facturar":"facturar","click .btn-cerrar":"cerrar","click #btn-modificar-pedido":"modificar_pedido"
+    },
+    modificar_pedido:function(e){
+        e.preventDefault()
+        var id_pedido=$("#id_pedido").val()        
+         window.localStorage.setItem("origin",base_url+"index.php/operaciones/pedidos/index/"+id_pedido)
+         redirect(base_url+"index.php/operaciones/consultas/editarpedido/"+id_pedido)  
     },
     cerrar:function()
     { 
@@ -264,8 +270,12 @@ return false
 })
 
 
-function consultar(){
-var patrones={nro_pedido:($("#patron_nro_pedido").val()).trim(),fecha:($("#patron_fecha").val()).trim(),nombres:($("#patronnombres").val()).trim(),estado:($("#estado").val()).trim()}
+function consultar(id_pedido=""){
+
+    if(id_pedido==""){
+        id_pedido=($("#patron_nro_pedido").val()).trim()
+    }
+var patrones={nro_pedido:id_pedido,fecha:($("#patron_fecha").val()).trim(),nombres:($("#patronnombres").val()).trim(),estado:($("#estado").val()).trim()}
 olista.render(patrones);    
 }
 
@@ -318,3 +328,10 @@ $("#btnconfirmar").click(function(e){
 })
 
 oProductosview= new CarritoView();
+
+$(".btn-nuevo-pedido").click(function (e) {
+    e.preventDefault()    
+        redirect(base_url+"index.php/operaciones/pedidos/nuevo/")
+    
+    
+})

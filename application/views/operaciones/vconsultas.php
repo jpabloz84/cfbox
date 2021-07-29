@@ -1,5 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$modo=(isset($modo))?$modo:"";
+$origen=(isset($origen))?$origen:"";
 ?>
 <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
 <link href="<?=BASE_FW?>assets/plugins/bootstrap-combobox/css/bootstrap-combobox.css" rel="stylesheet" />
@@ -18,28 +20,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </tr>
                         </thead>
                         <tbody>                                                               
-    <% _.each(ls, function(elemento) {  %>
+    <% _.each(ls, function(elemento) { 
+        var cf=(elemento.get("cf"))?elemento.get("cf"):""
+     %>
     <tr>        
         <td><%=elemento.get('strnombrecompleto') %> (<%=elemento.get('id_cliente') %>)</td>        
         <td><%=elemento.get('cuit') %></td>        
         <td><%=elemento.get('documento') %> - <%=elemento.get('nro_docu') %></td>
-        <td style='text-align:right'>
+        <%
+            if(cf=="1" && modo=="NP"){%>
+            <td></td>
+            <td style='text-align:right' >
+            <div class="btn-group">
+                <button type="button" class="btn btn-xs btn-primary" idcliente="<%=elemento.get('id_cliente')%>" id="nuevo-pedido-cf">
+                Realizar pedido&nbsp;<i class="fa fa-paperclip"></i></button>
+            </div>
+            </td>
+            <%}else{%>
+            <td style='text-align:right'>
             <div class="btn-group">
                 <button type="button" class="btn btn-xs btn-primary" name='comprobantes' id="comp-<%=elemento.get('id_cliente')%>">
                 comprobantes&nbsp;<i class="fa fa-paperclip"></i></button>
             </div>
-        </td>
-        <td style='text-align:right'>
-            <div class="btn-group">
-            <button type="button" class="btn btn-xs btn-primary" name='seleccionar' id="seleccionar-<%=elemento.get('id_cliente')%>">
-                cuenta&nbsp;<i class="fa fa-arrow-right"></i></button></div>
-        </td>
+            </td>
+            <td style='text-align:right'>
+                <div class="btn-group">
+                <button type="button" class="btn btn-xs btn-primary" name='seleccionar' id="seleccionar-<%=elemento.get('id_cliente')%>">
+                    cuenta&nbsp;<i class="fa fa-arrow-right"></i></button></div>
+            </td>
+            <%}
+        %>
+        
     </tr>
     <% }); %>
     </tbody>
 </table>
 </script>
-
+<input type="hidden" id="modo" value="<?=$modo?>">
+<input type="hidden" id="origen" value="<?=$origen?>">
 <input type="hidden" name="base_url" id="base_url" value="<?=base_url()?>">
 <input type="hidden" name="id_empresa" id="id_empresa" value="<?=$visitante->get_id_empresa()?>">
 <!-- ================== END PAGE LEVEL STYLE ================== -->
@@ -147,7 +165,7 @@ $.getScript('<?=BASE_FW?>assets/plugins/bootstrap-combobox/js/bootstrap-combobox
                         
                         inicializacion_contexto();     
                         $('[data-click="panel-reload"]').click(function(){
-                            handleCheckPageLoadUrl("<?php echo base_url();?>index.php/operaciones/consultas/");
+                            handleCheckPageLoadUrl("<?php echo base_url();?>index.php/<?=$origen;?>");
                             
                          });
                     });
@@ -170,7 +188,7 @@ var Clientes=Backbone.Collection.extend({
 
         var cond=" habilitado=1 and id_empresa="+$("#id_empresa").val()
         if(typeof patrones['id_cliente']!="undefined" )
-        {   if(parseInt(patrones['id_cliente'])>0)
+        {   if(+(patrones['id_cliente'])>0)
             {
             cond+=' and id_cliente='+patrones['id_cliente'];
             }
@@ -195,8 +213,6 @@ var Clientes=Backbone.Collection.extend({
         {
             cond+=' and nro_docu='+patrones['nro_docu']
         }
-        
-                
         if(typeof this.options.eventos != "undefined")
         {
             this.options.eventos.trigger("initload",that);
@@ -256,7 +272,8 @@ var ClientesView=Backbone.View.extend({
     },
     events:{
             "click button[name='seleccionar']":'cuentacorriente',
-            "click button[name='comprobantes']":'comprobantes'
+            "click button[name='comprobantes']":'comprobantes',
+            "click button[id='nuevo-pedido-cf']":'realizar_pedido',
     },
     cargar:function(oClientes)
     {   
@@ -272,7 +289,7 @@ var ClientesView=Backbone.View.extend({
         }
         this.rendercount++;
         var tpl=_.template($('#tpl-table-list').html());                
-        this.$el.html(tpl({ls:olist}));
+        this.$el.html(tpl({ls:olist,modo:$("#modo").val()}));
          $('#data-table').DataTable({responsive: true,searching:false,lengthChange:false,pageLength:10,
             "columns": [
             { "orderable": true },
@@ -307,22 +324,22 @@ var ClientesView=Backbone.View.extend({
             swal("Error","No tiene permiso para realizar esta acción","error")
          }
 
-    }/*,
-    seleccionar:function(e)
-    {   var id_button=(e.target.id.indexOf("seleccionar-")>=0)?e.target.id:e.target.parentNode.id
+    },
+    realizar_pedido:function(e)
+    {   var id_cliente=$("#nuevo-pedido-cf").attr("idcliente")
         if(permitir(prt_operaciones,2))
          {
-            var id_model=id_button.replace("seleccionar-","");
-            handleCheckPageLoadUrl("<?php echo base_url();?>index.php/operaciones/consultas/operar/"+id_model);
+            
+            handleCheckPageLoadUrl("<?php echo base_url();?>index.php/operaciones/consultas/nuevopedido/"+id_cliente);
          }else{
              swal("Error","No tiene permiso para realizar esta acción","error")
          }
-    }*/
+    }
 });//ElementosView
 function inicializacion_contexto()
 {
 
-window.localStorage.setItem("origin",$("#base_url").val()+"index.php/operaciones/consultas/")
+window.localStorage.setItem("origin",$("#base_url").val()+"index.php/"+$("#origen").val())
     /*elimino todos los eventos porque al volver, se  multiplican los eventos*/
 eventos.off(); 
 oClientesView=new ClientesView({el:$('#panel-body-clientes')}); 
@@ -356,9 +373,18 @@ oClientesView=new ClientesView({el:$('#panel-body-clientes')});
         id_cliente_preseleccionado=window.localStorage.getItem("id_cliente_selected")
     }
  }
-if(id_cliente_preseleccionado!=""){
+
+
+var modo=$("#modo").val()
+if(id_cliente_preseleccionado!="" && modo!="NP"){
 oClientesView.render({id_cliente:id_cliente_preseleccionado,nro_docu:'',apenom:'',email:''});    
 }
+
+//nuevo pedido
+if(modo=="NP"){
+oClientesView.render({cf:1,nro_docu:'',apenom:'',email:''});    
+}
+
 else{
 oClientesView.render({cf:1,nro_docu:'',apenom:'',email:''});  
 }
@@ -370,7 +396,10 @@ function buscar(evt)
     
 event.stopPropagation()
 window.localStorage.setItem("id_cliente_selected","")
+var modo=$("#modo").val()
 var patrones={nro_docu:$("#patron_nro_docu").val(),apenom:$("#patronnombres").val(),email:$("#patronemail").val()}
+
+
 oClientesView.render(patrones);
 
 }

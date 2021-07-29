@@ -37,9 +37,13 @@ private $definiciones=array(); //para uso del oyente
 		$this->load->model("mservice");
 		$arrVariales=array();
 		$arrVariales['visitante']=$this->visitante;
+		$arrVariales['modo']="CC"; //cuenta corrientes consulta clientes
+		$arrVariales['origen']="operaciones/consultas/"; //para saber de donde viene
 		$this->load->view('operaciones/vconsultas',$arrVariales);
 		
 	}	
+
+
 
 	function listener(){
 		if(!$this->loginOn() || !$this->visitante->permitir('prt_operaciones',1))
@@ -74,11 +78,80 @@ private $definiciones=array(); //para uso del oyente
 			$this->load->view('vlogin');
 			return; 
 		}
+		$this->init_carrito($id_cliente);
+
+	}//operar
+
+	function nuevopedido($id_cliente){
+		if(!$this->loginOn() || !$this->visitante->permitir('prt_operaciones',2))
+		{
+			$this->load->view('vlogin');
+			return; 
+		}
+
 		$this->load->model("mservice");
 		$arrVariales=array();
 		$arrVariales['visitante']=$this->visitante;
 		$arrVariales['id_cliente']=$id_cliente;
-		$arrVariales['id_pedido']="";
+		$arrVariales['id_pedido']=0; //vacio: venta normal, cero:pedido nuevo,distinto de cero:edicion de pedido
+		$arrVariales['id_comp']=0;
+		$arrVariales['tipos_productos']=$this->mservice->getwhere('vertipo_item','vigente=1 and id_empresa='.$this->visitante->get_id_empresa());
+		$arrVariales['categorias']=$this->mservice->getCategorias();
+		$rscli=$this->mservice->getwhere('verclientes','id_cliente='.$id_cliente.' and id_empresa='.$this->visitante->get_id_empresa());
+		$arrVariales['cliente']=$rscli[0];
+		$id_empresa=$this->visitante->get_id_empresa();
+			$rs=$this->mservice->get("empresa_datos_pagina",array("*"),"id_empresa=$id_empresa");
+			foreach ($rs as $fila) {
+				$arrVariales[$fila['variable']]=$fila['valor'];
+			}
+		if($this->mservice->numError()!=0)
+		{
+			die($this->mservice->descError());
+		}
+		$this->load->view('operaciones/vpedido',$arrVariales);
+		
+
+	}//nuevo pedido
+
+	function editarpedido($id_pedido){
+		if(!$this->loginOn() || !$this->visitante->permitir('prt_operaciones',2))
+		{
+			$this->load->view('vlogin');
+			return; 
+		}
+		$rsped=$this->mservice->getwhere('vercheckout_presupuesto','id_pedido='.$id_pedido.' and id_empresa='.$this->visitante->get_id_empresa());
+		if(!count($rsped)>0)return;
+		$id_cliente=$rsped[0]['id_cliente'];
+		$this->load->model("mservice");
+		$arrVariales=array();
+		$arrVariales['visitante']=$this->visitante;
+		$arrVariales['id_cliente']=$id_cliente;
+		$arrVariales['id_pedido']=$id_pedido; //vacio: venta normal, cero:pedido nuevo,distinto de cero:edicion de pedido
+		$arrVariales['id_comp']=0;
+		$arrVariales['tipos_productos']=$this->mservice->getwhere('vertipo_item','vigente=1 and id_empresa='.$this->visitante->get_id_empresa());
+		$arrVariales['categorias']=$this->mservice->getCategorias();
+		$rscli=$this->mservice->getwhere('verclientes','id_cliente='.$id_cliente.' and id_empresa='.$this->visitante->get_id_empresa());
+		$arrVariales['cliente']=$rscli[0];
+		$id_empresa=$this->visitante->get_id_empresa();
+			$rs=$this->mservice->get("empresa_datos_pagina",array("*"),"id_empresa=$id_empresa");
+			foreach ($rs as $fila) {
+				$arrVariales[$fila['variable']]=$fila['valor'];
+			}
+		if($this->mservice->numError()!=0)
+		{
+			die($this->mservice->descError());
+		}
+		$this->load->view('operaciones/vpedido',$arrVariales);
+		
+
+	}//operar
+
+	function init_carrito($id_cliente,$id_pedido=""){
+		$this->load->model("mservice");
+		$arrVariales=array();
+		$arrVariales['visitante']=$this->visitante;
+		$arrVariales['id_cliente']=$id_cliente;
+		$arrVariales['id_pedido']=$id_pedido; //vacio: venta normal, cero:pedido nuevo,distinto de cero:edicion de pedido
 		$arrVariales['id_comp']=0;
 		$arrVariales['tipos_productos']=$this->mservice->getwhere('vertipo_item','vigente=1 and id_empresa='.$this->visitante->get_id_empresa());
 		$arrVariales['categorias']=$this->mservice->getCategorias();
@@ -88,13 +161,18 @@ private $definiciones=array(); //para uso del oyente
 		$arrVariales['cliente']=$rscli[0];
 		$arrVariales['tipo_pagos']=$this->mservice->getwhere('tipo_pagos','habilitado=1','orden');
 		
+		$id_empresa=$this->visitante->get_id_empresa();
+			$rs=$this->mservice->get("empresa_datos_pagina",array("*"),"id_empresa=$id_empresa");
+			foreach ($rs as $fila) {
+				$arrVariales[$fila['variable']]=$fila['valor'];
+			}
+		
 		if($this->mservice->numError()!=0)
 		{
 			die($this->mservice->descError());
 		}
 		$this->load->view('operaciones/voperar',$arrVariales);
-
-	}//operar
+	}
 
 	function checkout($id_pedido){
 		if(!$this->loginOn() || !$this->visitante->permitir('prt_operaciones',2))
@@ -123,6 +201,14 @@ private $definiciones=array(); //para uso del oyente
 		{
 			die($this->mservice->descError());
 		}
+
+		$id_empresa=$this->visitante->get_id_empresa();
+			$rs=$this->mservice->get("empresa_datos_pagina",array("*"),"id_empresa=$id_empresa");
+			foreach ($rs as $fila) {
+				$arrVariales[$fila['variable']]=$fila['valor'];
+			}
+
+
 		$this->load->view('operaciones/voperar',$arrVariales);
 
 	}//operar

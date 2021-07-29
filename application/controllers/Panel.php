@@ -49,9 +49,14 @@ class Panel extends CI_Controller {
 		$this->load->view('panel_header',$itemsheader);		
 		$itemsbody=array();
 		$itemsbody['visitante']=$this->visitante;
+
 		$this->load->view('panel_body',$itemsbody);
+		$rs=$this->mservice->get("empresa_datos_pagina",array("*"),"id_empresa=".$this->visitante->get_id_empresa());
+			foreach ($rs as $fila) {
+				$itemsfooter[$fila['variable']]=$fila['valor'];
+			}
 		$itemsfooter['visitante']=$this->visitante;
-		$this->load->view('panel_footer');
+		$this->load->view('panel_footer',$itemsfooter);
 	}
 
 	function carga()

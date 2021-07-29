@@ -120,14 +120,10 @@ var ClienteView=Backbone.View.extend(
                 type: "info",
                 showCancelButton: true,
                 closeOnConfirm: true          
-                }, function () {
-                    
+                }, function () {                    
             redirect(that.options.urlregresar)
           })
-            /*win.dialog('Usted va a abandonar esta pantalla y va perder la información cargada aqui. ¿Desea continuar?',' Atención',4, function(url){
-                    
-                    handleCheckPageLoadUrl(url);            
-                },this.options.urlregresar);*/
+            
         
         }
     },

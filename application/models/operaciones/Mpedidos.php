@@ -30,7 +30,9 @@ function descError(){
 function definiciones($id_empresa=0){
 $definiciones=array();
 $definiciones['selpedidos']="SELECT *,date_format(fecha,'%H:%i') as horario,DiaW(fecha,'es_ES') as diastr,Mes(fecha,'es_ES') as messtr,date_format(fecha,'%d') as dia,date_format(fecha,'%d-%m-%Y %H:%i') as fechastr,date_format(fecha,'%Y') as anio,path_comp FROM vercheckout_presupuesto WHERE id_empresa=$id_empresa {nombres} {fecha} {pedido} {estado} order by fecha desc";
-$definiciones['selpedidosproductos']="SELECT * FROM vercheckout_detalle WHERE id_empresa=$id_empresa {idpedido} order by nro_detalle desc";
+$definiciones['selpedidosproductos']="SELECT *,importe_unitario as importe_base,0 as unitario,0 as readonly,importe_unitario as importe_tipo,importe_item as importe_total  FROM vercheckout_detalle WHERE id_empresa=$id_empresa {idpedido} order by nro_detalle desc";
+ $definiciones['sel_tipo_envios']="SELECT id_tipo_envio,tipo_envio, CASE WHEN t.id_tipo_envio=1 THEN s.`id_servicio` END AS id_servicio, CASE WHEN t.id_tipo_envio=1 THEN s.`servicio` END servicio ,CASE WHEN t.id_tipo_envio=1 THEN s.`precio_venta` ELSE 0 END importe FROM tipo_envio t ,servicios s 
+WHERE s.`id_empresa`=".$id_empresa."  AND habilitado=1 AND s.`cadeteria`=1 AND s.id_servicio IN(SELECT id_servicio FROM servicios WHERE habilitado=1 AND id_empresa=".$id_empresa." AND cadeteria=1 HAVING MAX(fe_actualizacion))";
 
 return $definiciones;
 }
